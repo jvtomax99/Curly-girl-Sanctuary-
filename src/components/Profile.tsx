@@ -1,10 +1,12 @@
 // Your own profile: each item with its own "who sees this" right beside it, and
 // "See my profile as" to check what others get.
 import { useEffect, useState } from 'react'
-import { addItems, loadMyProfile, loadPublicProfile, replaceAnswers, setVisibility, type MyProfile, type PublicProfile } from '../backend'
+import { addItems, loadMyKit, loadMyProfile, loadPublicProfile, replaceAnswers, setVisibility, type MyProfile, type PublicProfile } from '../backend'
 import { DEFAULT_VISIBILITY, hasCard, itemsFromQuiz, profileRows, visibleTo, type Item, type ItemId, type Visibility } from '../engine/profile'
 import type { QuizState } from '../engine/state'
+import { EMPTY_KIT, kitIsEmpty, shownToOthers, type Kit } from '../engine/kit'
 import Audience from './Audience'
+import KitList from './KitList'
 import Avatar from './Avatar'
 import IdCard from './IdCard'
 
@@ -24,6 +26,7 @@ export default function Profile({ quiz, go, onSignedOut }: Props) {
   const [msg, setMsg] = useState('')
   const [view, setView] = useState<View>('me')
   const [visitorView, setVisitorView] = useState<PublicProfile | 'offline' | null>(null)
+  const [kit, setKit] = useState<Kit | 'offline'>(EMPTY_KIT)
 
   const refresh = async () => {
     const p = await loadMyProfile()
@@ -38,6 +41,7 @@ export default function Profile({ quiz, go, onSignedOut }: Props) {
         if (again && again !== 'offline') p.items = again.items
       }
     }
+    setKit(await loadMyKit(p.id))
     setMe(p)
     setState('ready')
   }
@@ -125,6 +129,7 @@ export default function Profile({ quiz, go, onSignedOut }: Props) {
         <div className="card-tools">
           <button className="btn-link" onClick={share}>Share my profile</button>
           <button className="btn-link" onClick={() => go('#/settings')}>Settings</button>
+          {me.staff && <button className="btn-link" onClick={() => go('#/admin/products')}>Moderate products</button>}
         </div>
       </header>
 
@@ -178,10 +183,25 @@ export default function Profile({ quiz, go, onSignedOut }: Props) {
         </>
       ))}
 
-      <section className="p-item">
-        <h2 className="p-title">Curl Kit</h2>
-        <p className="note">Your go-to products, tools and how you dry: coming next.</p>
-      </section>
+      {section('kit', (
+        <>
+          <h2 id="h-kit" className="p-title">Curl Kit</h2>
+          {kit === 'offline' ? (
+            <p className="note">Your Curl Kit needs a connection.</p>
+          ) : view === 'me' ? (
+            <>
+              <KitList kit={kit} owner level={3} empty="Nothing in your Curl Kit yet: your go-to products, tools and how you dry." />
+              <button className="btn btn-secondary btn-wide kit-edit" onClick={() => go('#/kit')}>{kitIsEmpty(kit) ? 'Start my Curl Kit' : 'Edit my Curl Kit'}</button>
+            </>
+          ) : kitIsEmpty(shownToOthers(kit)) ? (
+            <p className="note">Nothing in the Curl Kit yet.</p>
+          ) : items.some((i) => i.item === 'kit') ? (
+            <KitList kit={shownToOthers(kit)} level={3} />
+          ) : (
+            <p className="p-hidden">Hidden</p>
+          )}
+        </>
+      ))}
 
       {view === 'me' && quiz.done && (
         <button className="btn-link" onClick={useLatestQuiz} disabled={busy === 'quiz'}>Use my latest quiz answers</button>
