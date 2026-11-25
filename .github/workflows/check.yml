@@ -1,0 +1,35 @@
+# Runs on every pull request (and on main): tests, type check, build, then the
+# site check (every screen opens at phone and desktop width with no errors).
+# All must pass before Jose is asked to push.
+name: App checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    # Pinned: Playwright can't install its browser on Ubuntu 26.04 (Cruelty-Free-Beauty-, 2026-11).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Install the browser
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
+      - name: Site check
+        run: node .github/site-check.cjs index.html "index.html#/quiz/0" "index.html#/card"

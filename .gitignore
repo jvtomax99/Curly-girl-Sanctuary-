@@ -10,3 +10,4 @@ dist/
 # Owner documents and real members' data never go in this public repo.
 *.pdf
 exports/
+shots/

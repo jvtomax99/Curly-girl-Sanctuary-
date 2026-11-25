@@ -66,8 +66,9 @@ brief's suggestion). No Shop in v1.
   the button at any moment; with reduce motion on, nothing slides.
 - **Quiz.** 10 questions, one per screen, progress bar, Back, answers
   saved as the person goes. Proposed questions (Susan to approve): 1 curl
-  pattern (picture picker, 2A to 4C), 2 porosity (simple test explained,
-  with "not sure"), 3 strand thickness (fine, medium, coarse), 4 density
+  pattern (picture picker, 2A to 4C), 2 porosity (everyday clues with
+  "Not sure", not a test: Jose, 2026-11-25, since no study backs the home
+  float test; `docs/sources.md` S1, S2), 3 strand thickness (fine, medium, coarse), 4 density
   (how much scalp you can see), 5 heritage (multi-select with "Mixed",
   "Not sure yet", "Prefer not to say" plus Susan's list; an optional text
   box for traditions; "Show heritage on my profile" switch, off), 6 how
@@ -82,8 +83,9 @@ brief's suggestion). No Shop in v1.
   just the quiz".
   Done when: the card shows the person's answers, heritage appears only
   with the switch on, and the card can be shared as an image.
-- **Quiz only.** Broad tips for the hair type (each tip sourced), "Email
-  my results" at the very bottom. No account. The email is used only to
+- **Quiz only.** Broad tips for the hair type (each tip sourced; grouped
+  wavy, curly, coily), "Email my results" at the very bottom (waits for
+  the backend; Phase 1 offers saving and sharing the card). No account. The email is used only to
   send the results unless the person opts in to more.
   Done when: tips show for every type 2A to 4C, the email arrives with the
   card, and without the opt-in the address is not kept after sending.
@@ -246,8 +248,8 @@ or 3 similar apps, plan mode, his OK, then build.
 
 | # | Phase | Status |
 |---|---|---|
-| 0 | Web app chosen (2026-11-25); DESIGN.md sample page approved in the Phase 1 plan | Started |
-| 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend) | Not started |
+| 0 | Web app chosen; React, TypeScript, Vite on GitHub Pages (2026-11-25) | Done |
+| 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend; "Join the Sanctuary" opens a coming-soon page) | Built 2026-11-25, waiting for Jose's push |
 | 2 | Backend picked; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
 | 3 | Learn: Holy Grail, Around the World starter pages, mixed curls, vitamins (behind the reviewer) | Not started |
 | 4 | Community with safety: Hair Posts, Ask the Sanctuary, report, block, mute, moderation queue (Tutorials if kept in v1) | Not started |

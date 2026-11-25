@@ -13,19 +13,27 @@ in `.claude/rules/general.md`; where this file differs, this file wins.
 
 ## Status (2026-11-25)
 
-New repo. No app code yet. The plan comes from Susan's "App Build Brief
-v2" (November 2026), summarized in `SPEC.md`. The PDF itself stays out of
-the repo (her document; the repo is public). Jose, 2026-11-25: "just
-webapp for now", so Phase 1 is a web app with no server. **Next:** Phase
-1's plan (compare 2 or 3 similar quiz apps, plan mode, his OK).
+The plan comes from Susan's "App Build Brief v2" (November 2026),
+summarized in `SPEC.md`. The PDF itself stays out of the repo (her
+document; the repo is public). Jose, 2026-11-25: "just webapp for now".
+Phase 1 (opening, quiz, Curly ID Card, tips) is built, with no server.
+**Next:** Jose's "push", then picking the backend before Phase 2.
 
 ## Rules for this repo
 
 - **Web app only, no server yet** (Jose, 2026-11-25). No accounts,
   database, uploads or outside services until Jose picks a backend, which
-  is due before Phase 2. Quiz answers stay on the phone until then. When
-  the Phase 1 plan settles the tools and hosting, fill in "Commands" and
-  "Preview, checks and going live" below in the same commit.
+  is due before Phase 2. Quiz answers stay on the phone (`cgs.quiz.v1`);
+  a change to its shape must still read old saves.
+- **This one has a build step** (Jose picked it, 2026-11-25): React,
+  TypeScript and Vite, like Marcela's Closet. Edit `src/`, never `dist/`.
+  The card's rules stay plain TypeScript in `src/engine/`, each rule
+  change with a test in `src/engine/card.test.ts`. Every quiz word lives
+  in `src/data/quiz.ts`.
+- **Relative paths only.** The app lives at `/Curly-girl-Sanctuary-/`, so
+  a link starting with `/` breaks (`base: './'` in `vite.config.ts`).
+- **Sources twice.** `docs/sources.md` and `src/data/sources.ts` hold the
+  same list: change both together.
 - **Who signs off:** TO FILL (Jose alone, or Susan too for words and looks
   that speak for her). Until filled, show Jose, and remind him to check
   plans that change what members see with Susan.
@@ -64,6 +72,9 @@ webapp for now", so Phase 1 is a web app with no server. **Next:** Phase
 - **Secrets** (database keys, email service keys) live only in the
   hosting's settings, never in the repo, a chat or a log. Anything Jose has
   to save gets one copy-paste block with `YOUR_VALUE_HERE` for the secret.
+- **Offline worker** (`public/sw.js`, from Marcela's Closet): network
+  first, its own cache only (`cgs-app:/Curly-girl-Sanctuary-/`); other apps
+  share jvtomax99.github.io, so never open or delete their caches.
 - **Accessible by default.** Text only in the contrast pairs `DESIGN.md`
   marks "all text"; every animation has a reduce-motion version; tap
   targets at least 44 px; inputs at least 16 px (iPhone zooms otherwise).
@@ -80,17 +91,31 @@ webapp for now", so Phase 1 is a web app with no server. **Next:** Phase
 
 ## Commands
 
-TO FILL with the Phase 1 plan.
+- `npm install`, then `npm test`, `npm run typecheck`, `npm run build`
+  (into `dist/`), `npm run dev` while working.
+- Site check, after a build: `node .github/site-check.cjs index.html
+  "index.html#/quiz/0" "index.html#/card"`.
+- Walk-through with screenshots: serve `dist/` from a parent folder as
+  `/Curly-girl-Sanctuary-/` (a folder holding a link named
+  `Curly-girl-Sanctuary-` to `dist`, then `python3 -m http.server 8130`),
+  then `node tools/shots.cjs <url> <out-folder> [scale]`. It answers the
+  quiz with made-up answers, reloads mid-quiz, saves the card picture,
+  goes offline, and checks reduce motion; it prints any problem.
+- Icons: `node tools/make-icons.cjs` after changing `public/icon.svg`.
 
 ## Preview, checks and going live
 
-- **Hosting:** TO FILL with the Phase 1 plan (GitHub Pages, like Jose's
-  other web apps, is the likely pick). Until then, nothing is live.
+- **Hosting: GitHub Pages**, at
+  https://jvtomax99.github.io/Curly-girl-Sanctuary-/ (the path is
+  case-sensitive). `.github/workflows/pages.yml` tests, builds and
+  publishes `dist/` on every push to `main`, so merging is going live. The
+  repo's Settings, Pages, Source must be "GitHub Actions" (a repo setting:
+  Jose does it).
 - **Preview.** Playwright screenshots at 390 px first, then 1440 px, plus a
   short "try this" list. UI changes: before and after.
-- **Checks.** TO FILL with the Phase 1 plan (tests, type check, build, a site
-  check). Whatever they are, they run on every pull request and must be
-  green before asking Jose to push.
+- **Checks.** `.github/workflows/check.yml` ("App checks") runs the
+  tests, type check, build and site check on every pull request; all must
+  be green before asking Jose to push.
 - **Into `main`.** A pull request, a phone notification naming the change
   and saying it needs his "push", and buttons ("Push" first). On "Push",
   merge it, check the live app, then one line on how to undo it.

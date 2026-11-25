@@ -24,6 +24,9 @@ approves before this is used everywhere. Keep every value in one place
 | `--cream-light` | Cream Light (added) | #FFF3DD | Main screen background |
 | `--cocoa` | Cocoa (added) | #5A2A1E | All body text and outlines |
 | `--deep-teal` | Deep Teal (added) | #1B7A69 | Secondary buttons (white text) |
+| `--white` | White | #FFFFFF | Text on Deep Teal and Soft Coral; answer cards |
+| `--black` | Black | #000000 | Only the opening's fade to black |
+| `--cocoa-line` | Cocoa at 18% | rgba(90, 42, 30, 0.18) | Thin rules between Curly ID Card rows |
 
 ## Text and background pairs
 
@@ -37,6 +40,9 @@ re-measure any new pair before using it.
 | Cocoa on Mustard | 5.4:1 | All text (chips, Holy Grail) |
 | White on Deep Teal | 5.2:1 | All text (secondary button) |
 | Cream Light on Palm Green | 5.5:1 | All text (dark banners) |
+| Cocoa on White | 11.8:1 | All text (answer cards; measured 2026-11-25) |
+| Cocoa on Cream | 8.1:1 | All text (picked answers, the ID card; measured 2026-11-25) |
+| Cocoa on Peach | 4.6:1 | All text (the video placeholder; measured 2026-11-25) |
 | White on Soft Coral | 3.3:1 | Large or bold only (intro sequence) |
 | Cocoa on Sunset Orange | 3.5:1 | Large or bold only (headers on orange) |
 | Sunset Orange on Cream Light | 3.1:1 | Large or bold only (decoration, not text) |
@@ -58,7 +64,11 @@ the matches; fonts in AI-made images may not be real fonts).
 
 - Flat, rounded shapes, thin Cocoa outlines, leaf borders.
 - The Curly ID Card keeps its chunky retro lettering: a Coral Pink and
-  Tangerine diagonal block with "Curly ID Card", the rows on Cream.
+  Tangerine diagonal block with "Curly ID Card" in Mustard letters outlined
+  and shadowed in Cocoa (decoration, large and bold only; the outline
+  carries the contrast), the rows on Cream. The shared picture
+  (`src/cardImage.ts`) repeats these colors as hex codes, because a canvas
+  can't read CSS variables: change both together.
 - Cream Light for reading screens; bright orange, pink and teal for
   headers, the splash and illustration, so hair photos stay the stars.
 - Photos show real curls in every texture and shade.
@@ -76,7 +86,18 @@ instead of slides). Opening timings: fade to black about 1.5 s, black to
 Soft Coral Pink about 2 s, the two lines slide in over 1.5 to 2 s at the
 same time. Holy Grail's carpet roll-out is optional.
 
+## Sizes (Phase 1, `src/styles.css`)
+
+- Corners: 16 px cards (`--radius`), 14 px answer cards, pills 999 px.
+- Outline: 1.5 px Cocoa (`--line`); a picked answer gets 3 px Sunset
+  Orange on Cream (or Mustard for chips).
+- Tap targets: 48 px buttons (`--tap`), never under 44 px.
+- Type: body 17 px; question titles 24 px, 800 weight; labels 13 px caps
+  with 0.14em spacing; inputs 16 px.
+- The Curly ID Card has a 6 px Cocoa drop shadow (flat, no blur).
+- Wider than a phone: the app stays a 480 px column.
+
 ## Still to add
 
-Spacing scale, corner radii, shadows, type sizes and the header, card and
-form parts, from the sample page once the stack is chosen.
+A spacing scale as tokens, and the parts later phases need (bottom bar,
+forms, feed cards).
