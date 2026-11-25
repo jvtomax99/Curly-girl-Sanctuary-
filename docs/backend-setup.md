@@ -19,7 +19,10 @@ here goes in the repo or in a chat except where it says so. Prices were checked
 
 In each project: SQL Editor, New query, paste the whole of
 `supabase/migrations/0001_phase2.sql` from the repo, Run. It should say "Success. No
-rows returned".
+rows returned". Then a new query with the whole of
+`supabase/migrations/0002_turn_down.sql` (Phase 2b: lets a moderator turn down a
+product), Run. Paste each file only once per project, in number order. If you already
+pasted 0001 before 0002 existed, just paste 0002.
 
 Sign-ups start **closed** on the server: only emails on the allow-list can join. In
 `cgs-live`, SQL Editor, add yourself, Susan and any testers:
@@ -100,6 +103,10 @@ then in `cgs-live`, SQL Editor:
 insert into public.staff (member, role)
 select id, 'owner' from public.profiles where username = 'YOUR_CURLY_USERNAME';
 ```
+
+Your profile then shows "Moderate products" (`#/admin/products`): approve or turn down
+products members added, and merge duplicates. A moderator is added the same way with
+`'moderator'` in place of `'owner'`.
 
 ## Clean-up of unconfirmed accounts
 

@@ -240,6 +240,7 @@ set role authenticated;
 select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"}', false);
 select t.refused($$select public.merge_products((select id from public.products where name = 'Hydrating Leave In'), (select id from public.products where name = 'Hydrating Leave-In'))$$, 'a non-moderator merges products');
 select t.refused($$select public.approve_product((select id from public.products where name = 'Flax Gel'))$$, 'a non-moderator approves a product');
+select t.refused($$select public.turn_down_product((select id from public.products where name = 'Flax Gel'))$$, 'a non-moderator turns down a product');
 reset role;
 insert into public.staff (member, role) values (:B, 'moderator');
 set role authenticated;
@@ -253,6 +254,17 @@ select t.ok(exists (select 1 from public.kit_products k join public.products p o
   and not exists (select 1 from public.kit_products k join public.products p on p.id = k.product_id
     where p.name = 'Hydrating Leave In'), 'merging moves every kit to the kept product');
 select t.ok(not exists (select 1 from public.search_products('hydrating') where name = 'Hydrating Leave In'), 'a merged duplicate is no longer suggested');
+-- Turning down: A adds a product; the moderator turns it down; it leaves A's kit.
+select set_config('request.jwt.claims', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"}', false);
+insert into public.products (brand, name, kind, added_by) values ('Kitchen Test', 'Glitter Paste', 'other', :A);
+insert into public.kit_products (member, product_id) select :A, id from public.products where name = 'Glitter Paste';
+select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"}', false);
+select t.refused($$select public.turn_down_product((select id from public.products where name = 'Hydra Curl Cream'))$$,
+  'turning down an approved product');
+select public.turn_down_product((select id from public.products where name = 'Glitter Paste'));
+select t.ok(not exists (select 1 from public.products where name = 'Glitter Paste'), 'a turned-down product is gone');
+select set_config('request.jwt.claims', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"}', false);
+select t.ok((select count(*) from public.kit_products where member = :A) = 3, 'a turned-down product leaves the kit, the rest stay');
 select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"}', false);
 select public.approve_product((select id from public.products where name = 'Flax Gel'));
 select set_config('request.jwt.claims', '{"sub":"dddddddd-dddd-dddd-dddd-dddddddddddd"}', false);

@@ -3,7 +3,9 @@
 // Without the two build settings the app has no backend: "Join" keeps the
 // coming-soon page and nothing here runs.
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js'
-import { parseItems, type Item, type ItemId, type Visibility } from './engine/profile'
+import { DEFAULT_VISIBILITY, parseItems, type Item, type ItemId, type Visibility } from './engine/profile'
+import { dryOf, parseKitProducts, parseProducts, parseSuggestions, parseTools, type Kit, type NewProduct, type Product, type Suggestion } from './engine/kit'
+import type { Dry } from './data/kit'
 
 const URL_ = import.meta.env.VITE_SUPABASE_URL as string | undefined
 const KEY = import.meta.env.VITE_SUPABASE_KEY as string | undefined
@@ -309,3 +311,189 @@ export async function loadPublicProfile(username: string, asVisitor = false): Pr
     return 'offline'
   }
 }
+
+// ------------------------------------------------------------------ Curl Kit
+
+const KIT_SELECT = 'product_id, added_at, products(id, brand, name, kind, status)'
+
+/** A member's kit as the server lets this viewer see it: everything for the owner,
+ *  nothing when the kit's audience leaves this viewer out. */
+async function readKit(c: SupabaseClient, member: string): Promise<Kit | 'offline'> {
+  const [p, t, i] = await Promise.all([
+    c.from('kit_products').select(KIT_SELECT).eq('member', member).order('added_at'),
+    c.from('kit_tools').select('tool').eq('member', member),
+    c.from('profile_items').select('item, value, visibility').eq('member', member).eq('item', 'kit'),
+  ])
+  if (p.error || t.error || i.error) return 'offline'
+  return { products: parseKitProducts(p.data), tools: parseTools(t.data), dry: dryOf(parseItems(i.data)[0]) }
+}
+
+export async function loadMyKit(member: string): Promise<Kit | 'offline'> {
+  if (!sb) return 'offline'
+  try {
+    return await readKit(sb, member)
+  } catch {
+    return 'offline'
+  }
+}
+
+export interface MemberKit {
+  id: string
+  username: string
+  avatar: string
+  /** null: this viewer isn't in the kit's audience (the server sent nothing). */
+  kit: Kit | null
+}
+
+/** A shared kit link (#/u/<username>/kit). `asVisitor` asks without being logged in. */
+export async function loadMemberKit(username: string, asVisitor = false): Promise<MemberKit | 'offline' | null> {
+  const c = asVisitor ? visitor : sb
+  if (!c) return null
+  try {
+    const p = await c.from('profiles').select('id, username, avatar').eq('username', username.toLowerCase()).maybeSingle()
+    if (p.error) return 'offline'
+    if (!p.data) return null
+    const i = await c.from('profile_items').select('item, value, visibility').eq('member', p.data.id).eq('item', 'kit')
+    if (i.error) return 'offline'
+    const base = { id: p.data.id as string, username: p.data.username, avatar: p.data.avatar }
+    if (!parseItems(i.data).length) return { ...base, kit: null }
+    const kit = await readKit(c, p.data.id)
+    return kit === 'offline' ? 'offline' : { ...base, kit }
+  } catch {
+    return 'offline'
+  }
+}
+
+/** The kit's own row (its audience and how I dry). Made the first time something goes
+ *  in the kit, at the kit's default audience; an existing row is left alone. */
+async function ensureKitItem(member: string): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  const { error } = await sb
+    .from('profile_items')
+    .upsert({ member, item: 'kit', visibility: DEFAULT_VISIBILITY.kit }, { onConflict: 'member,item', ignoreDuplicates: true })
+  return error ? fail(friendly(error.message)) : { ok: true }
+}
+
+export async function searchProducts(q: string): Promise<Suggestion[] | 'offline'> {
+  if (!sb) return 'offline'
+  try {
+    const { data, error } = await sb.rpc('search_products', { q })
+    return error ? 'offline' : parseSuggestions(data)
+  } catch {
+    return 'offline'
+  }
+}
+
+export async function addToKit(member: string, productId: number): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    const k = await ensureKitItem(member)
+    if (!k.ok) return k
+    const { error } = await sb.from('kit_products').upsert({ member, product_id: productId }, { onConflict: 'member,product_id', ignoreDuplicates: true })
+    return error ? fail(friendly(error.message)) : { ok: true }
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+export async function removeFromKit(member: string, productId: number): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    const { error } = await sb.from('kit_products').delete().eq('member', member).eq('product_id', productId)
+    return error ? fail(friendly(error.message)) : { ok: true }
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+/** "Add your own": a new product, waiting for a moderator (only this member sees it
+ *  until then), straight into their kit. */
+export async function addOwnProduct(member: string, p: NewProduct): Promise<Result & { product?: Product }> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .insert({ brand: p.brand.trim(), name: p.name.trim(), kind: p.kind, added_by: member })
+      .select('id, brand, name, kind, status')
+    if (error) return fail(friendly(error.message))
+    const product = parseProducts(data)[0]
+    if (!product) return fail(friendly(''))
+    const r = await addToKit(member, product.id)
+    return r.ok ? { ok: true, product } : r
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+export async function setTool(member: string, tool: string, on: boolean): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    if (!on) {
+      const { error } = await sb.from('kit_tools').delete().eq('member', member).eq('tool', tool)
+      return error ? fail(friendly(error.message)) : { ok: true }
+    }
+    const k = await ensureKitItem(member)
+    if (!k.ok) return k
+    const { error } = await sb.from('kit_tools').upsert({ member, tool }, { onConflict: 'member,tool', ignoreDuplicates: true })
+    return error ? fail(friendly(error.message)) : { ok: true }
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+/** How I dry, kept in the kit's own row; null clears it. */
+export async function setDry(member: string, dry: Dry | null): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    const k = await ensureKitItem(member)
+    if (!k.ok) return k
+    const { error } = await sb
+      .from('profile_items')
+      .update({ value: dry ? { dry } : {}, updated_at: new Date().toISOString() })
+      .eq('member', member)
+      .eq('item', 'kit')
+    return error ? fail(friendly(error.message)) : { ok: true }
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+// ------------------------------------------------------------------ moderators
+
+/** Products members added that wait for a check, oldest first. The server sends them
+ *  only to moderators. Who added each one is never shown. */
+export async function pendingProducts(): Promise<Product[] | 'offline'> {
+  if (!sb) return 'offline'
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .select('id, brand, name, kind, status')
+      .eq('status', 'pending')
+      .is('merged_into', null)
+      .order('created_at')
+    return error ? 'offline' : parseProducts(data)
+  } catch {
+    return 'offline'
+  }
+}
+
+async function staffCall(fn: string, args: Record<string, number>): Promise<Result> {
+  if (!sb) return fail('Not open yet.')
+  try {
+    const { error } = await sb.rpc(fn, args)
+    if (!error) return { ok: true }
+    const m = error.message ?? ''
+    if (m.includes('moderators only')) return fail('Only moderators can do that.')
+    if (m.includes('must be approved')) return fail('The one to keep must be an approved product.')
+    if (m.includes('two different')) return fail('Pick two different products.')
+    if (m.includes('waiting for a check')) return fail('Only a product waiting for a check can be turned down.')
+    return fail(friendly(m))
+  } catch (e) {
+    return fail(friendly(String(e)))
+  }
+}
+
+export const approveProduct = (id: number) => staffCall('approve_product', { product: id })
+export const turnDownProduct = (id: number) => staffCall('turn_down_product', { product: id })
+/** Every kit with the duplicate moves to the kept product; the duplicate stops showing. */
+export const mergeProducts = (duplicate: number, kept: number) => staffCall('merge_products', { duplicate, kept })
