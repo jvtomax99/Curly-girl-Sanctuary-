@@ -55,13 +55,14 @@ function fake() {
   const pick = (r, cols) => Object.fromEntries(cols.map((c) => [c, r[c]]))
   /** select=..., products(id, brand, ...): the embedded product, or null when this viewer may not see it. */
   const embed = (uid, rows, select) => {
-    const m = /products\(([^)]*)\)/.exec(select ?? '')
+    const m = /products(!inner)?\(([^)]*)\)/.exec(select ?? '')
     if (!m) return rows
-    const cols = m[1].split(',').map((c) => c.trim())
-    return rows.map((r) => {
+    const cols = m[2].split(',').map((c) => c.trim())
+    const out = rows.map((r) => {
       const p = db.products.find((x) => x.id === r.product_id)
       return { ...r, products: p && productReadable(uid, p) ? pick(p, cols) : null }
     })
+    return m[1] ? out.filter((r) => r.products) : out
   }
 
   function filters(url) {
@@ -130,6 +131,14 @@ function fake() {
         .slice(0, 10)
       return json(200, rows)
     }
+    if (path === '/rest/v1/rpc/add_own_product') {
+      if (!isMember(uid)) return json(400, { code: 'P0001', message: 'cgs: members only' })
+      const row = { id: ++pid, brand: String(body.new_brand).trim(), name: String(body.new_name).trim(), kind: body.new_kind, status: 'pending', added_by: uid, merged_into: null, created_at: new Date().toISOString() }
+      db.products.push(row)
+      if (!db.profile_items.some((i) => i.member === uid && i.item === 'kit')) db.profile_items.push({ member: uid, item: 'kit', value: {}, visibility: 'everyone' })
+      db.kit_products.push({ member: uid, product_id: row.id, added_at: new Date().toISOString() })
+      return json(200, [pick(row, ['id', 'brand', 'name', 'kind', 'status'])])
+    }
     const staffOnly = () => json(400, { code: 'P0001', message: 'cgs: moderators only' })
     if (path === '/rest/v1/rpc/approve_product') {
       if (!isStaff(uid)) return staffOnly()
@@ -184,6 +193,7 @@ function fake() {
     const method = req.method()
 
     if (method === 'GET' || method === 'HEAD') {
+      if (t === 'products' && /added_by|\*/.test(url.searchParams.get('select') ?? '*')) return json(401, { code: '42501', message: 'permission denied for table products' })
       const rows = embed(uid, db[t].filter((r) => readable[t](uid, r) && match(r)), url.searchParams.get('select'))
       if (one) return rows.length === 1 ? json(200, rows[0]) : json(406, { code: 'PGRST116', message: 'no rows', details: `${rows.length} rows` })
       return json(200, rows)

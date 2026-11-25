@@ -314,7 +314,8 @@ export async function loadPublicProfile(username: string, asVisitor = false): Pr
 
 // ------------------------------------------------------------------ Curl Kit
 
-const KIT_SELECT = 'product_id, added_at, products(id, brand, name, kind, status)'
+// !inner: a product this viewer may not see (someone else's pending one) drops the whole row.
+const KIT_SELECT = 'product_id, added_at, products!inner(id, brand, name, kind, status)'
 
 /** A member's kit as the server lets this viewer see it: everything for the owner,
  *  nothing when the kit's audience leaves this viewer out. */
@@ -407,19 +408,15 @@ export async function removeFromKit(member: string, productId: number): Promise<
 }
 
 /** "Add your own": a new product, waiting for a moderator (only this member sees it
- *  until then), straight into their kit. */
+ *  until then), and its place in their kit, made together on the server. */
 export async function addOwnProduct(member: string, p: NewProduct): Promise<Result & { product?: Product }> {
   if (!sb) return fail('Not open yet.')
   try {
-    const { data, error } = await sb
-      .from('products')
-      .insert({ brand: p.brand.trim(), name: p.name.trim(), kind: p.kind, added_by: member })
-      .select('id, brand, name, kind, status')
+    void member // the server adds it to the logged-in member's own kit
+    const { data, error } = await sb.rpc('add_own_product', { new_brand: p.brand.trim(), new_name: p.name.trim(), new_kind: p.kind })
     if (error) return fail(friendly(error.message))
     const product = parseProducts(data)[0]
-    if (!product) return fail(friendly(''))
-    const r = await addToKit(member, product.id)
-    return r.ok ? { ok: true, product } : r
+    return product ? { ok: true, product } : fail(friendly(''))
   } catch (e) {
     return fail(friendly(String(e)))
   }

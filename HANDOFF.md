@@ -13,7 +13,7 @@ visibility, Curl Kit, delete account, on Supabase. Plan approved by Jose:
   shared kit link (`#/u/<username>/kit`), suggestions with member counts, "Add your
   own" (waits for a moderator), tools, how I dry, the moderator page
   (`#/admin/products`: approve, turn down, merge). New server file
-  `supabase/migrations/0002_turn_down.sql`, tested in `supabase/tests/rules.sql`.
+  `supabase/migrations/0002_phase2b.sql`, tested in `supabase/tests/rules.sql`.
   Made-up stand-in products until Susan's starter list.
 
 **Next step:** when Jose sends the `cgs-test` address and publishable key (both

@@ -236,7 +236,7 @@ async function run(width, height, tag, server) {
   await tap(a.getByRole('group', { name: 'Who sees your Curl Kit?' }).getByRole('radio', { name: 'Community' }))
   await a.waitForTimeout(300)
   await v.reload()
-  await v.getByText('keeps their Curl Kit to members').waitFor()
+  await v.getByText('Members may see more').waitFor()
   check(!(await v.getByText('Hydra Curl Cream').isVisible()), `${tag}: a Community kit shows to a visitor`)
   await a.goto(BASE + '#/profile')
   await a.getByRole('heading', { name: '@coily.ana' }).waitFor()

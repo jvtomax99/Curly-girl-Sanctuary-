@@ -118,8 +118,10 @@ no backend and behaves as in Phase 1.
   read), `MemberKit` (`#/u/<username>/kit`, the shared link), `AdminProducts`
   (`#/admin/products`, staff only: approve, turn down, merge). How I dry lives in the
   `kit` profile item's value; the kit item is made at Everyone the first time
-  something goes in the kit. `supabase/migrations/0002_turn_down.sql` adds
-  `turn_down_product` (pending products only). `tools/db-check.sh` loads every
+  something goes in the kit. `supabase/migrations/0002_phase2b.sql` adds
+  `add_own_product` (the product and its kit row together), `turn_down_product`
+  (pending products only), and hides `products.added_by` from everyone, moderators
+  included (column grants). `tools/db-check.sh` loads every
   migration in number order.
 - Build settings (GitHub repo variables, read by `pages.yml`):
   `SUPABASE_URL`, `SUPABASE_PUBLIC_KEY`, `SIGNUPS_OPEN`.

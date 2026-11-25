@@ -20,8 +20,8 @@ here goes in the repo or in a chat except where it says so. Prices were checked
 In each project: SQL Editor, New query, paste the whole of
 `supabase/migrations/0001_phase2.sql` from the repo, Run. It should say "Success. No
 rows returned". Then a new query with the whole of
-`supabase/migrations/0002_turn_down.sql` (Phase 2b: lets a moderator turn down a
-product), Run. Paste each file only once per project, in number order. If you already
+`supabase/migrations/0002_phase2b.sql` (Phase 2b: "Add your own", turning down a
+product, and hiding who added a product), Run. Paste each file only once per project, in number order. If you already
 pasted 0001 before 0002 existed, just paste 0002.
 
 Sign-ups start **closed** on the server: only emails on the allow-list can join. In

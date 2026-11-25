@@ -44,7 +44,7 @@ export default function MemberKit({ username, loggedIn, myId, canJoin, go }: Pro
         {k.kit || mine ? (
           <KitList kit={k.kit ?? EMPTY_KIT} owner={mine} empty={mine ? 'Your Curl Kit is empty so far.' : `@${k.username} hasn’t added anything yet.`} />
         ) : (
-          <p className="note">@{k.username} keeps their Curl Kit to {loggedIn ? 'themselves' : 'members'} for now.</p>
+          <p className="note">There’s no Curl Kit to show for @{k.username}{loggedIn ? '' : ' here. Members may see more'}.</p>
         )}
       </div>
       <div className="card-actions">

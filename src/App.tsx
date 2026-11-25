@@ -298,7 +298,7 @@ export default function App() {
       {route.name === 'reset' && <NewPassword onDone={toProfile} />}
       {route.name === 'profile' && session && <Profile key={session.user.id} quiz={state} go={go} onSignedOut={signedOut} />}
       {route.name === 'settings' && session && <Settings onSignedOut={signedOut} onLoggedOut={loggedOut} onDeleted={deleted} />}
-      {route.name === 'kit' && session && <CurlKit key={session.user.id} go={go} onBack={() => goBack('#/profile')} onSignedOut={signedOut} />}
+      {route.name === 'kit' && session && <CurlKit key={session.user.id} onBack={() => goBack('#/profile')} onSignedOut={signedOut} />}
       {route.name === 'admin' && session && <AdminProducts key={session.user.id} onSignedOut={signedOut} onBack={() => goBack('#/profile')} />}
       {route.name === 'memberKit' && <MemberKit username={route.username} loggedIn={!!session} myId={session?.user.id ?? null} canJoin={canJoin} go={go} />}
       {route.name === 'member' && <PublicProfile username={route.username} loggedIn={!!session} canJoin={canJoin} go={go} />}

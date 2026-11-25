@@ -65,7 +65,6 @@ export default function ProductSearch({ label, placeholder = 'Type a brand or pr
         spellCheck={false}
         enterKeyHint="search"
         maxLength={60}
-        disabled={disabled}
       />
       <p className="hint" role="status">{said}</p>
       {results.length > 0 && (

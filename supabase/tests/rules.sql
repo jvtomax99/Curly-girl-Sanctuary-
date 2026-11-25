@@ -254,10 +254,14 @@ select t.ok(exists (select 1 from public.kit_products k join public.products p o
   and not exists (select 1 from public.kit_products k join public.products p on p.id = k.product_id
     where p.name = 'Hydrating Leave In'), 'merging moves every kit to the kept product');
 select t.ok(not exists (select 1 from public.search_products('hydrating') where name = 'Hydrating Leave In'), 'a merged duplicate is no longer suggested');
--- Turning down: A adds a product; the moderator turns it down; it leaves A's kit.
+select t.refused($$select added_by from public.products$$, 'a moderator reads who added a product');
+select t.ok((select count(*) from public.products where status = 'pending') = 1, 'a moderator lists pending products without who added them');
+-- Turning down: A adds a product (with "Add your own"); the moderator turns it down; it leaves A's kit.
 select set_config('request.jwt.claims', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"}', false);
-insert into public.products (brand, name, kind, added_by) values ('Kitchen Test', 'Glitter Paste', 'other', :A);
-insert into public.kit_products (member, product_id) select :A, id from public.products where name = 'Glitter Paste';
+select t.ok((select status from public.add_own_product(' Kitchen Test ', 'Glitter Paste', 'other')) = 'pending', 'Add your own makes a pending product');
+select t.ok(exists (select 1 from public.kit_products k join public.products p on p.id = k.product_id
+  where k.member = :A and p.name = 'Glitter Paste' and p.brand = 'Kitchen Test'), 'Add your own puts it in the kit, brand trimmed');
+select t.refused($$select added_by from public.products$$, 'a member reads who added a product');
 select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"}', false);
 select t.refused($$select public.turn_down_product((select id from public.products where name = 'Hydra Curl Cream'))$$,
   'turning down an approved product');
@@ -269,6 +273,16 @@ select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbb
 select public.approve_product((select id from public.products where name = 'Flax Gel'));
 select set_config('request.jwt.claims', '{"sub":"dddddddd-dddd-dddd-dddd-dddddddddddd"}', false);
 select t.ok(exists (select 1 from public.products where name = 'Flax Gel'), 'an approved product is visible to all');
+
+-- Add your own needs a confirmed member.
+set role anon;
+select set_config('request.jwt.claims', '', false);
+select t.refused($$select public.add_own_product('X', 'Y', 'gel')$$, 'a visitor adds a product');
+reset role;
+set role authenticated;
+select set_config('request.jwt.claims', '{"sub":"dddddddd-dddd-dddd-dddd-dddddddddddd"}', false);
+select t.refused($$select public.add_own_product('X', 'Y', 'gel')$$, 'a half-made account adds a product');
+select t.refused($$select public.add_own_product('X', 'Y', 'Not A Kind!')$$, 'a product type outside the list');
 
 -- ---------------------------------------------------------------- Delete account
 reset role;

@@ -19,7 +19,6 @@ import Audience from './Audience'
 import ProductSearch from './ProductSearch'
 
 interface Props {
-  go: (hash: string) => void
   onBack: () => void
   onSignedOut: () => void
 }
@@ -32,7 +31,7 @@ interface Me {
 
 const BLANK: NewProduct = { brand: '', name: '', kind: '' }
 
-export default function CurlKit({ go, onBack, onSignedOut }: Props) {
+export default function CurlKit({ onBack, onSignedOut }: Props) {
   const [me, setMe] = useState<Me | null>(null)
   const [kit, setKit] = useState<Kit | null>(null)
   const [state, setState] = useState<'loading' | 'ready' | 'offline'>('loading')
@@ -76,9 +75,13 @@ export default function CurlKit({ go, onBack, onSignedOut }: Props) {
     setMsg('')
     const r = await work()
     setBusy(false)
-    if (!r.ok) return setError(r.error)
+    if (!r.ok) {
+      setError(r.error)
+      return false
+    }
     after()
     setMsg(said)
+    return true
   }
 
   const inKit = (id: number) => kit.products.some((p) => p.id === id)
@@ -104,7 +107,7 @@ export default function CurlKit({ go, onBack, onSignedOut }: Props) {
     const listed = alreadyListed(own, found.flatMap((f) => (f === 'offline' ? [] : f)))
     setBusy(false)
     if (listed) {
-      await pick(listed)
+      if (!(await pick(listed))) return
       setMsg(`${listed.name} by ${listed.brand} was already listed, so it’s in your kit now.`)
     } else {
       setBusy(true)
@@ -219,7 +222,6 @@ export default function CurlKit({ go, onBack, onSignedOut }: Props) {
       <p className="note" role="status">{msg}</p>
       <div className="card-actions">
         <button className="btn btn-primary" onClick={share}>Share my Curl Kit</button>
-        <button className="btn-link" onClick={() => go(`#/u/${me.username}/kit`)}>See it as others do</button>
         <button className="btn-link" onClick={onBack}>Back to my profile</button>
       </div>
     </main>
