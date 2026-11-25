@@ -13,7 +13,7 @@ no backend and behaves as in Phase 1.
 
 ## Folders and key files
 
-- `index.html`: the page shell, home-screen settings, manifest and icons.
+- `index.html`: the page shell, home-screen settings, manifest, icons, the description, canonical address and link preview tags (Open Graph, Twitter card).
 - `vite.config.ts`: `base: './'` keeps every built path relative (the app
   lives at `/Curly-girl-Sanctuary-/`); Vitest runs `src/**/*.test.ts`.
 - `src/main.tsx`: loads the fonts (Fontsource packages, bundled) and
@@ -46,7 +46,10 @@ no backend and behaves as in Phase 1.
 - `src/components/`: `Opening` (stages video, black, pink, words, start on
   timers; Skip; CSS cross-fades under reduce motion), `Quiz` (one question
   per screen, curl grid drawn by `CurlArt`, chips for multi-select, the
-  heritage box and switch), `IdCard`, `CardScreen`, `Tips`, `Soon`.
+  heritage box and switch), `IdCard`, `CardScreen`, `Tips`, `Soon`,
+  `NotFound` (any `#/` address that isn't a screen, and where `public/404.html`
+  sends a missing address). Each screen sets the browser tab's name (`titleOf` in
+  `App.tsx`). Without a backend, log-in and members-only addresses open `#/soon`.
 - `src/cardImage.ts`: draws the card as a 1080 x 1350 PNG on a canvas and
   shares it through the phone's share sheet, or downloads it.
 - `public/`: copied into `dist/` as is: `sw.js` (offline worker, from
@@ -54,7 +57,10 @@ no backend and behaves as in Phase 1.
   only; on install it saves the folder page, its built files and the
   WOFF2 fonts the stylesheet names, so one visit is enough to work
   offline; each saved page drops the old builds' files), `manifest.webmanifest`, `icon.svg` and the PNG icons made from it
-  by `tools/make-icons.cjs`.
+  by `tools/make-icons.cjs`; `social.jpg`, the link preview picture (`index.html`'s
+  `og:image`), drawn from `tools/social-card.html` by `tools/make-social.cjs`;
+  `404.html` (GitHub Pages' page for a missing address: it hands over to the
+  app's `#/page-not-found`); `sitemap.xml` (the one address).
 - `tools/shots.cjs`: the walk-through with screenshots and checks, plus
   the cases a review found (offline after one visit, the heritage switch,
   Back after the in-app Back).

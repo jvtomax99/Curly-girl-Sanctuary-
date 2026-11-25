@@ -23,6 +23,7 @@ import Settings from './components/Settings'
 import BottomBar from './components/BottomBar'
 import TabSoon from './components/TabSoon'
 import Legal from './components/Legal'
+import NotFound from './components/NotFound'
 
 const SIMPLE = ['card', 'tips', 'soon', 'join', 'login', 'reset', 'profile', 'settings', 'preview', 'community', 'learn', 'lab'] as const
 const LEGAL = ['guidelines', 'privacy', 'terms'] as const
@@ -34,6 +35,7 @@ type Route =
   | { name: Simple }
   | { name: 'legal'; doc: string }
   | { name: 'member'; username: string }
+  | { name: 'missing' }
 
 /** Screens that need a logged-in member. */
 const MEMBERS_ONLY = new Set<string>(['profile', 'settings', 'reset', 'community', 'learn', 'lab'])
@@ -49,11 +51,30 @@ function readRoute(): Route {
   if (u) return { name: 'member', username: u[1].toLowerCase() }
   if ((LEGAL as readonly string[]).includes(h)) return { name: 'legal', doc: h }
   if ((SIMPLE as readonly string[]).includes(h)) return { name: h as Simple }
+  // An app address that doesn't exist (a typo, an old link): say so. Anything else after the #
+  // (empty, or what a sign-in service may leave) opens the app as usual.
+  if (location.hash.startsWith('#/') && h !== '') return { name: 'missing' }
   return { name: 'opening' }
 }
 
+const SITE = 'Curly Girl Sanctuary'
+const SCREEN_NAMES: Record<string, string> = {
+  card: 'Your Curly ID Card', tips: 'Your results', soon: 'Join the Sanctuary', join: 'Join the Sanctuary',
+  login: 'Log in', reset: 'New password', profile: 'My profile', settings: 'Settings', preview: SITE,
+  community: 'Community', learn: 'Learn', lab: 'Curl Lab', missing: 'Page not found',
+  guidelines: 'Community guidelines', privacy: 'Privacy policy', terms: 'Terms of use',
+}
+/** The browser tab's name for each screen. */
+function titleOf(r: Route): string {
+  if (r.name === 'opening') return `${SITE} · Take the curl quiz`
+  if (r.name === 'quiz') return `Question ${r.step + 1} of ${QUESTIONS.length} · ${SITE}`
+  if (r.name === 'member') return `@${r.username} · ${SITE}`
+  const name = SCREEN_NAMES[r.name === 'legal' ? r.doc : r.name] ?? SITE
+  return name === SITE ? SITE : `${name} · ${SITE}`
+}
+
 const hashOf = (r: Route) =>
-  r.name === 'quiz' ? `#/quiz/${r.step}` : r.name === 'opening' ? '' : r.name === 'legal' ? `#/${r.doc}` : r.name === 'member' ? `#/u/${r.username}` : `#/${r.name}`
+  r.name === 'quiz' ? `#/quiz/${r.step}` : r.name === 'opening' ? '' : r.name === 'legal' ? `#/${r.doc}` : r.name === 'member' ? `#/u/${r.username}` : r.name === 'missing' ? '' : `#/${r.name}`
 
 /** The furthest question the person may open: the first one still unanswered. */
 function furthest(s: QuizState): number {
@@ -173,7 +194,11 @@ export default function App() {
   // Members-only screens need a session; join and log in don't once you have one.
   useEffect(() => {
     if (!authReady) return
-    if (MEMBERS_ONLY.has(route.name) && !session) {
+    if (!sb && (MEMBERS_ONLY.has(route.name) || route.name === 'login')) {
+      // No accounts in this build: a log-in form that can't log anyone in would only mislead.
+      history.replaceState(null, '', '#/soon')
+      setRoute({ name: 'soon' })
+    } else if (MEMBERS_ONLY.has(route.name) && !session) {
       history.replaceState(null, '', '#/login')
       setRoute({ name: 'login' })
     } else if ((route.name === 'join' || route.name === 'login') && session) {
@@ -201,6 +226,7 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    document.title = titleOf(route)
   }, [route])
 
   const start = () => {
@@ -283,7 +309,8 @@ export default function App() {
       {route.name === 'reset' && <NewPassword onDone={toProfile} />}
       {route.name === 'profile' && session && <Profile key={session.user.id} quiz={state} go={go} onSignedOut={signedOut} />}
       {route.name === 'settings' && session && <Settings onSignedOut={signedOut} onLoggedOut={loggedOut} onDeleted={deleted} />}
-      {route.name === 'member' && <PublicProfile username={route.username} loggedIn={!!session} canJoin={canJoin} go={go} />}
+      {route.name === 'member' && <PublicProfile username={route.username} loggedIn={!!session} canJoin={canJoin} quizDone={state.done} go={go} />}
+      {route.name === 'missing' && <NotFound quizDone={state.done} go={go} />}
       {(route.name === 'community' || route.name === 'learn' || route.name === 'lab') && <TabSoon tab={route.name} />}
       {route.name === 'legal' && <Legal doc={route.doc} onBack={() => goBack(session ? '#/settings' : canJoin ? '#/join' : '#/card')} />}
       {withBar && <BottomBar current={hashOf(route)} go={go} />}

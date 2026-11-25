@@ -43,7 +43,7 @@ re-measure any new pair before using it.
 | Cream Light on Palm Green | 5.5:1 | All text (dark banners) |
 | Cocoa on White | 11.8:1 | All text (answer cards; measured 2026-11-25) |
 | Cocoa on Cream | 8.1:1 | All text (picked answers, the ID card; measured 2026-11-25) |
-| Cocoa on Peach | 4.6:1 | All text (the video placeholder; measured 2026-11-25) |
+| Cocoa on Peach | 4.6:1 | All text (the video placeholder's title card; measured 2026-11-25) |
 | White on Soft Coral | 3.3:1 | Large or bold only (intro sequence) |
 | Cocoa on Sunset Orange | 3.5:1 | Large or bold only (headers on orange) |
 | Sunset Orange on Cream Light | 3.1:1 | Large or bold only (decoration, not text) |
@@ -89,7 +89,7 @@ same time. Holy Grail's carpet roll-out is optional.
 
 ## Sizes (Phase 1, `src/styles.css`)
 
-- Corners: 16 px cards (`--radius`), 14 px answer cards, pills 999 px.
+- Corners: 16 px cards (`--radius`), 14 px answer cards, fields and small boxes (`--radius-sm`), 18 px the Curly ID Card, pills 999 px.
 - Outline: 1.5 px Cocoa (`--line`); a picked answer gets 3 px Sunset
   Orange on Cream (or Mustard for chips).
 - Tap targets: 48 px buttons (`--tap`), never under 44 px.
