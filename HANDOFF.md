@@ -1,29 +1,39 @@
-# Handoff (2026-11-25)
+# Handoff (2026-11-25, Phase 2 in progress)
 
-**Goal:** Curly Girl Sanctuary, built phase by phase from Susan's brief
-(`SPEC.md`).
+**Goal:** Phase 2 of Curly Girl Sanctuary: accounts, profile with per-item
+visibility, Curl Kit, delete account, on Supabase. Plan approved by Jose:
+`docs/phase2-plan.md`.
 
-**Done:** repo set up (CLAUDE.md, SPEC.md, DESIGN.md, shared rules and
-docs); Phase 1 live at https://jvtomax99.github.io/Curly-girl-Sanctuary-/
-(pull request #1, merge ab6d537): opening, 10-question quiz, Curly ID Card
-with save or share as a picture, sourced tips, coming-soon page,
-offline. Checked live with `tools/shots.cjs`. GitHub Pages source is set
-to GitHub Actions.
+**Decided today (Jose):** Supabase (Free while building, Pro before real
+members); Resend free for sign-up email; avatar only in Phase 2 (photo uploads
+in Phase 4 with moderation); app-store decision at Phase 6.
 
-**Next step:** pick the backend before Phase 2 (`SPEC.md`, "Decisions
-waiting", item 1). Compare Supabase (Claude's pick: per-row privacy rules
-fit per-item visibility, filters, delete-account), Firebase (as in
-Interp), and an app-store phone app; check prices on the day; give Jose
-buttons. Then plan Phase 2 in plan mode (accounts, profile, visibility,
-Curl Kit, delete account, privacy policy and terms).
+**Done (2a, pull request from `claude/optimistic-goodall-vp57s1`):**
+database rules (`supabase/migrations/0001_phase2.sql`) with tests on a
+throwaway Postgres (`tools/db-check.sh`); join, log in, forgot and new
+password, profile with Only me, Community or Everyone on each item, "See my
+profile as", public profile by link, settings, delete account, bottom bar,
+the sign-up gate (`#/preview`); member walk-through on a stand-in server
+(`tools/member-shots.cjs`); Jose's setup guide (`docs/backend-setup.md`).
 
-**Left open for Jose or Susan:** who signs off, minimum age, asset budget,
-Susan's final questions 8 to 10, heritage list, fonts, art, intro video.
+**Next step:** after Jose's setup, run the member walk-through against the
+real `cgs-test` project (the session needs network access to its
+`*.supabase.co` address: ask with update_environment). Then 2b: Curl Kit
+screens (`#/kit`, `#/u/<name>/kit`, product suggestions with
+`search_products`, "Add your own", tools, how I dry) and the moderator page
+(`#/admin/products`: approve, merge). The database side of 2b is already in
+the migration and tested.
 
-**Not done yet:** `docs/CLEANUP.md` doesn't exist; offer
-`docs/cleanup-audit.md` after the next phase (the code is one day old).
-The branch `claude/optimistic-goodall-vp57s1` has one docs commit ("Mark
-Phase 1 as live") not yet in `main`; it goes with the next pull request.
+**Not verified yet:** anything against a real Supabase project (none exists
+yet); email links (confirm sign-up, reset password) end to end. A local
+Supabase couldn't run here: Docker image registries were blocked, and
+running downloaded binaries was refused by the session's permissions.
 
-**Read first:** CLAUDE.md, SPEC.md ("Decisions waiting", "Phases"),
-docs/ARCHITECTURE.md.
+**Left open for Jose or Susan:** privacy policy, terms, community
+guidelines, minimum age (16 is a stand-in), avatar art (stand-in uses five
+skin tones, middle tone as default), starter product list, whether first
+names are ever shown, who signs off, a domain for Resend (and maybe for the
+app: it shares jvtomax99.github.io storage with other apps).
+
+**Read first:** CLAUDE.md, `docs/phase2-plan.md`, `docs/ARCHITECTURE.md`
+("Phase 2: members"), SPEC.md (Phases).

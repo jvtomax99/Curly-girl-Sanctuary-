@@ -5,8 +5,11 @@ structure changes.
 
 A single-page web app: React 19 and TypeScript, built by Vite into static
 files in `dist/`, published on GitHub Pages by
-`.github/workflows/pages.yml`. No server, no outside services, no
-analytics. Quiz answers live only in the phone's localStorage.
+`.github/workflows/pages.yml`. No analytics. Quiz answers live in the
+phone's localStorage. From Phase 2, members' accounts and profiles live in
+Supabase (sign-in, Postgres with per-row rules); the app talks to it
+straight from the browser. Without the Supabase build settings the app has
+no backend and behaves as in Phase 1.
 
 ## Folders and key files
 
@@ -59,6 +62,49 @@ analytics. Quiz answers live only in the phone's localStorage.
   desktop width and fails on missing files or script errors.
   `.github/workflows/check.yml` runs it with the tests on pull requests.
 
+## Phase 2: members (Supabase)
+
+- `supabase/migrations/0001_phase2.sql`: every table and rule. `profiles`
+  (curly username, avatar; readable by all), `members_private` (names and
+  sign-up yeses; owner only), `profile_items` (one row per item: card,
+  scalp, heritage, kit, each with its visibility; heritage forced to
+  only_me on insert), `staff`, `products`, `kit_products`, `kit_tools`.
+  `can_see(owner, item)` is the one visibility check. Functions:
+  `username_available`, `search_products`, `approve_product`,
+  `merge_products`, `delete_my_account`. Sign-up runs `handle_new_user`,
+  which refuses an account without the age and guidelines yeses. Jose
+  pastes this file into each project (`docs/backend-setup.md`).
+- `supabase/tests/`: `stub-auth.sql` (a stand-in for Supabase's sign-in
+  tables) and `rules.sql` (made-up members A and B, a half-made account and
+  a visitor; every visibility, edit, kit, moderator and delete rule).
+  `tools/db-check.sh` runs them on a throwaway Postgres; CI runs it too.
+- `src/backend.ts`: the Supabase connection (session stored as `cgs.auth`,
+  code-in-address sign-in links), and every call the screens make. Also the
+  sign-up gate: `signupsOpen()` is true with `VITE_SIGNUPS_OPEN=true`, or on
+  one phone after visiting `#/preview` (shows a "Testing only" banner).
+  `MIN_AGE` (16, a stand-in) and `POLICY_VERSION` live here.
+- `src/engine/profile.ts`: username rules, quiz answers to profile items
+  (heritage always Only me, the traditions note never sent), turning server
+  rows back into card rows, the "See as Community" preview. Tests:
+  `src/engine/profile.test.ts`.
+- Screens in `src/components/`: `Join`, `LogIn` (with forgot password),
+  `NewPassword`, `Profile` (each item with its `Audience` picker; "See my
+  profile as" Me, Community, or Everyone, the last asked of the server as a
+  logged-out visitor), `PublicProfile` (`#/u/<username>`), `Settings`
+  (avatar, username, names, log out, delete account), `Avatar` (stand-in
+  drawing, five skin tones), `BottomBar`, `TabSoon`, `Legal` (draft
+  placeholders).
+- `src/App.tsx` routes: `#/join`, `#/login`, `#/reset`, `#/profile`,
+  `#/settings`, `#/u/<username>`, `#/community`, `#/learn`, `#/lab`,
+  `#/guidelines`, `#/privacy`, `#/terms`, `#/preview`. Email links come back
+  as `?code=` (and `?reset=1`); the app settles them, then cleans the address.
+- `tools/fake-supabase.cjs` and `tools/member-shots.cjs`: a stand-in server
+  played inside Playwright, and the member walk-through with screenshots
+  (join, profile, visibility, a second member, a visitor, delete, log in).
+  CI runs it. The real rules are proven by `tools/db-check.sh`, not by it.
+- Build settings (GitHub repo variables, read by `pages.yml`):
+  `SUPABASE_URL`, `SUPABASE_PUBLIC_KEY`, `SIGNUPS_OPEN`.
+
 ## Other files
 
 - `CLAUDE.md`, `.claude/rules/general.md`, `SPEC.md`, `DESIGN.md`,
@@ -69,5 +115,9 @@ analytics. Quiz answers live only in the phone's localStorage.
 
 - `node_modules/` and `dist/` are not committed.
 - The site check needs a fresh `npm run build` first; it checks `dist/`.
+- Playwright can't see requests that pass through the offline worker, so the
+  member walk-through blocks the worker (`serviceWorkers: 'block'`).
+- Postgres refuses to run as root; `tools/db-check.sh` switches to the
+  `postgres` user in a container.
 - Fonts on the shared card picture load through `document.fonts.load`
   before drawing; a font that fails falls back without breaking the card.

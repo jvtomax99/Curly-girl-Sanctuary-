@@ -7,12 +7,14 @@ import IdCard from './IdCard'
 interface Props {
   state: QuizState
   onJoin: () => void
+  /** Shown only once sign-ups are open (or in preview). */
+  onLogIn?: () => void
   onJustQuiz: () => void
   onRetake: () => void
   onEdit: () => void
 }
 
-export default function CardScreen({ state, onJoin, onJustQuiz, onRetake, onEdit }: Props) {
+export default function CardScreen({ state, onJoin, onLogIn, onJustQuiz, onRetake, onEdit }: Props) {
   const rows = cardRows(state)
   const [msg, setMsg] = useState('')
 
@@ -42,6 +44,7 @@ export default function CardScreen({ state, onJoin, onJustQuiz, onRetake, onEdit
       <div className="card-actions">
         <button className="btn btn-secondary" onClick={onJoin}>Join the Sanctuary</button>
         <button className="btn btn-plain" onClick={onJustQuiz}>No thanks, just the quiz</button>
+        {onLogIn && <button className="btn-link" onClick={onLogIn}>Already a member? Log in</button>}
         <button className="btn-link" onClick={onRetake}>Retake the quiz</button>
       </div>
     </main>
