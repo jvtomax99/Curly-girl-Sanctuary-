@@ -15,14 +15,17 @@ in `.claude/rules/general.md`; where this file differs, this file wins.
 
 New repo. No app code yet. The plan comes from Susan's "App Build Brief
 v2" (November 2026), summarized in `SPEC.md`. The PDF itself stays out of
-the repo (her document; the repo is public). **Next:** Jose picks the stack
-and hosting (`SPEC.md`, "Decisions waiting"), then Phase 1.
+the repo (her document; the repo is public). Jose, 2026-11-25: "just
+webapp for now", so Phase 1 is a web app with no server. **Next:** Phase
+1's plan (compare 2 or 3 similar quiz apps, plan mode, his OK).
 
 ## Rules for this repo
 
-- **No app code before the stack is chosen.** When Jose picks it, write it
-  into `SPEC.md` and fill in "Commands" and "Preview, checks and going
-  live" below in the same commit.
+- **Web app only, no server yet** (Jose, 2026-11-25). No accounts,
+  database, uploads or outside services until Jose picks a backend, which
+  is due before Phase 2. Quiz answers stay on the phone until then. When
+  the Phase 1 plan settles the tools and hosting, fill in "Commands" and
+  "Preview, checks and going live" below in the same commit.
 - **Who signs off:** TO FILL (Jose alone, or Susan too for words and looks
   that speak for her). Until filled, show Jose, and remind him to check
   plans that change what members see with Susan.
@@ -77,14 +80,15 @@ and hosting (`SPEC.md`, "Decisions waiting"), then Phase 1.
 
 ## Commands
 
-TO FILL once the stack is chosen.
+TO FILL with the Phase 1 plan.
 
 ## Preview, checks and going live
 
-- **Hosting:** TO FILL with the stack. Until then, nothing is live.
+- **Hosting:** TO FILL with the Phase 1 plan (GitHub Pages, like Jose's
+  other web apps, is the likely pick). Until then, nothing is live.
 - **Preview.** Playwright screenshots at 390 px first, then 1440 px, plus a
   short "try this" list. UI changes: before and after.
-- **Checks.** TO FILL with the stack (tests, type check, build, a site
+- **Checks.** TO FILL with the Phase 1 plan (tests, type check, build, a site
   check). Whatever they are, they run on every pull request and must be
   green before asking Jose to push.
 - **Into `main`.** A pull request, a phone notification naming the change

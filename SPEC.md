@@ -18,8 +18,10 @@ join the community, learn, and explore the Curl Lab.
   asks for one; under 13 brings US children's privacy law, COPPA, so 13 is
   the usual floor, and 16 or 18 makes moderation simpler).
 - **Who signs off:** TO FILL (Jose alone, or Susan for her words and looks).
-- **Form:** TO FILL with the stack decision below. The brief says "mobile
-  app" and mentions app store rules.
+- **Form:** a web app for now (Jose, 2026-11-25), phone first, with no
+  server until a backend is picked before Phase 2. The brief says "mobile
+  app" and mentions app store rules; an app-store version is a later
+  decision.
 
 ## Principles (from the brief)
 
@@ -197,16 +199,19 @@ brief's suggestion). No Shop in v1.
 
 ## Decisions waiting (Jose)
 
-1. **Stack and hosting.** Accounts with email verification, photo (and
-   maybe video) uploads, per-item privacy, filters, moderation and
-   delete-account all need a server and a database, which none of Jose's
-   plain-HTML apps have. Options to compare in plan mode, with prices
-   checked on the day: an installable web app with Supabase (sign-in,
-   database with per-row privacy rules, file storage), an installable web
-   app with Firebase (as in Interp), or a phone app for the app stores
-   (Apple charges a yearly developer fee, Google a one-time one, and both
-   review the app). Also: where the screens are hosted, and whether the
-   host's free plan allows a business app.
+1. **Backend, before Phase 2.** Decided 2026-11-25: a web app for now,
+   no server. Accounts with email verification, photo (and maybe video)
+   uploads, per-item privacy, filters, moderation and delete-account all
+   need a server and a database. Options to compare then, with prices
+   checked on the day: Supabase (sign-in, database with per-row privacy
+   rules, file storage; Claude's pick), Firebase (as in Interp), or a phone
+   app for the app stores (Apple charges a yearly developer fee, Google a
+   one-time one, and both review the app). Also: whether the host's free
+   plan allows a business app.
+   **"Email my results" needs an outside email service**, so with no
+   server Phase 1 offers saving and sharing the Curly ID Card instead, and
+   the email button waits for the backend (Jose to confirm in the Phase 1
+   plan).
 2. **Phase order** (below): the brief lists all of v1 at once; this spec
    proposes building it in phases, quiz first.
 3. **Tutorials video in v1 or v2** (storage cost).
@@ -241,9 +246,9 @@ or 3 similar apps, plan mode, his OK, then build.
 
 | # | Phase | Status |
 |---|---|---|
-| 0 | Stack and hosting chosen; DESIGN.md sample page approved | Not started |
-| 1 | Opening, quiz, Curly ID Card, quiz-only results and "Email my results" (no accounts; a privacy notice for the email) | Not started |
-| 2 | Accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
+| 0 | Web app chosen (2026-11-25); DESIGN.md sample page approved in the Phase 1 plan | Started |
+| 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend) | Not started |
+| 2 | Backend picked; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
 | 3 | Learn: Holy Grail, Around the World starter pages, mixed curls, vitamins (behind the reviewer) | Not started |
 | 4 | Community with safety: Hair Posts, Ask the Sanctuary, report, block, mute, moderation queue (Tutorials if kept in v1) | Not started |
 | 5 | Curl Lab first modules | Not started |
