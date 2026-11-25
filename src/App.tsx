@@ -43,7 +43,7 @@ const MEMBERS_ONLY = new Set<string>(['profile', 'settings', 'reset', 'community
 const AFTER_QUIZ = new Set<string>(['card', 'tips', 'soon'])
 
 function readRoute(): Route {
-  const h = location.hash.replace(/^#\/?/, '')
+  const h = location.hash.replace(/^#\/?/, '').replace(/\/+$/, '') // #/card/ is #/card
   const m = /^quiz\/(\d+)$/.exec(h)
   if (m) return { name: 'quiz', step: Number(m[1]) }
   if (h === 'quiz') return { name: 'quiz', step: 0 }
