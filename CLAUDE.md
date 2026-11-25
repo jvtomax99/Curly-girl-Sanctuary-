@@ -16,8 +16,9 @@ in `.claude/rules/general.md`; where this file differs, this file wins.
 The plan comes from Susan's "App Build Brief v2" (November 2026),
 summarized in `SPEC.md`. The PDF itself stays out of the repo (her
 document; the repo is public). Jose, 2026-11-25: "just webapp for now".
-Phase 1 (opening, quiz, Curly ID Card, tips) is built, with no server.
-**Next:** Jose's "push", then picking the backend before Phase 2.
+Phase 1 (opening, quiz, Curly ID Card, tips) went live 2026-11-25, with
+no server. **Next:** pick the backend (`SPEC.md`, "Decisions waiting"),
+then plan Phase 2.
 
 ## Rules for this repo
 

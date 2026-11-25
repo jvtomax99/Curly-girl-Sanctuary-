@@ -249,7 +249,7 @@ or 3 similar apps, plan mode, his OK, then build.
 | # | Phase | Status |
 |---|---|---|
 | 0 | Web app chosen; React, TypeScript, Vite on GitHub Pages (2026-11-25) | Done |
-| 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend; "Join the Sanctuary" opens a coming-soon page) | Built 2026-11-25, waiting for Jose's push |
+| 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend; "Join the Sanctuary" opens a coming-soon page) | Done: live 2026-11-25 |
 | 2 | Backend picked; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
 | 3 | Learn: Holy Grail, Around the World starter pages, mixed curls, vitamins (behind the reviewer) | Not started |
 | 4 | Community with safety: Hair Posts, Ask the Sanctuary, report, block, mute, moderation queue (Tutorials if kept in v1) | Not started |
