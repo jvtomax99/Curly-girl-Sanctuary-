@@ -14,7 +14,14 @@ const TIMES: [Stage, number][] = [
   ['start', 9200],
 ]
 
-export default function Opening({ onStart, skipToStart }: { onStart: () => void; skipToStart: boolean }) {
+interface Props {
+  onStart: () => void
+  skipToStart: boolean
+  /** "Already a member? Log in": only once sign-ups are open (or in preview). */
+  onLogIn?: () => void
+}
+
+export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
   const [stage, setStage] = useState<Stage>(skipToStart ? 'start' : 'video')
 
   useEffect(() => {
@@ -49,6 +56,11 @@ export default function Opening({ onStart, skipToStart }: { onStart: () => void;
         <button className="btn btn-primary" onClick={onStart} tabIndex={stage === 'start' ? 0 : -1}>
           Start the quiz
         </button>
+        {onLogIn && (
+          <button className="btn btn-plain op-login" onClick={onLogIn} tabIndex={stage === 'start' ? 0 : -1}>
+            Already a member? Log in
+          </button>
+        )}
       </div>
 
       {stage !== 'start' && (

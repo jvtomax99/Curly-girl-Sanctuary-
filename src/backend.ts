@@ -62,7 +62,8 @@ const OFFLINE = 'No connection. Try again when you’re online.'
 function friendly(message: string | undefined): string {
   const m = (message ?? '').toLowerCase()
   if (m.includes('already registered') || m.includes('already been registered')) return 'That email already has an account. Try logging in.'
-  if (m.includes('database error saving new user')) return 'That curly username was just taken. Try another.'
+  // The server refuses sign-ups for a taken username, or while sign-ups aren't open.
+  if (m.includes('database error saving new user')) return 'Couldn’t create the account: the curly username may have just been taken, or sign-ups aren’t open for this email yet.'
   if (m.includes('invalid login')) return 'That email and password don’t match.'
   if (m.includes('email not confirmed')) return 'Check your email first: tap the link we sent to finish joining.'
   if (m.includes('password') && (m.includes('least') || m.includes('weak') || m.includes('short'))) return 'Pick a longer password (at least 8 characters).'

@@ -93,6 +93,7 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [authReady, setAuthReady] = useState(!sb)
   const [loginNote, setLoginNote] = useState('')
+  const [loginForgot, setLoginForgot] = useState(false)
   const [route, setRoute] = useState<Route>(() => {
     const r = readRoute()
     if (r.name !== 'opening') return r
@@ -126,7 +127,13 @@ export default function App() {
         setLoginNote('That link has expired or was already used. Log in, or ask for a new one.')
         clearLink('#/login')
       } else if (s) clearLink(link.reset ? '#/reset' : '#/profile')
-      else {
+      else if (link.reset) {
+        // The reset link only works in the browser that asked for it (an app on the home
+        // screen and Safari don't share sign-ins, nor do email apps' own browsers).
+        setLoginNote('Open the reset link in the same app or browser you asked from, or ask for a new link here.')
+        setLoginForgot(true)
+        clearLink('#/login')
+      } else {
         // Opened on another phone or browser: the email is confirmed, the session isn't here.
         setLoginNote('Your email is confirmed. Log in to continue.')
         clearLink('#/login')
@@ -213,6 +220,13 @@ export default function App() {
   const join = () => go(session ? '#/profile' : canJoin ? '#/join' : '#/soon')
   const toProfile = () => go('#/profile')
   const signedOut = useCallback(() => setSession(null), [])
+  /** Log out lands on the card (or the opening) without a history step, so the phone's
+   *  Back doesn't walk back through members-only screens. */
+  const loggedOut = () => {
+    setSession(null)
+    history.replaceState(null, '', state.done ? '#/card' : '#/')
+    setRoute(readRoute())
+  }
   const deleted = (clearQuiz: boolean) => {
     setSession(null)
     if (clearQuiz) {
@@ -229,7 +243,7 @@ export default function App() {
   const withBar = session && ['profile', 'settings', 'community', 'learn', 'lab'].includes(route.name)
 
   if (route.name === 'opening') {
-    return <Opening onStart={start} skipToStart={state.seenOpening} />
+    return <Opening onStart={start} skipToStart={state.seenOpening} onLogIn={canJoin && !session ? () => go('#/login') : undefined} />
   }
   if (MEMBERS_ONLY.has(route.name) && !authReady) {
     return <div className="app"><main className="screen"><p className="note" role="status">Loading…</p></main></div>
@@ -265,10 +279,10 @@ export default function App() {
       {route.name === 'tips' && <Tips state={state} onBack={() => goBack('#/card')} onRetake={retake} />}
       {route.name === 'soon' && <Soon onBack={() => goBack('#/card')} onTips={() => go('#/tips')} />}
       {route.name === 'join' && <Join go={go} onJoined={toProfile} />}
-      {route.name === 'login' && <LogIn go={go} onLoggedIn={toProfile} note={loginNote} canJoin={canJoin} />}
+      {route.name === 'login' && <LogIn go={go} onLoggedIn={toProfile} note={loginNote} canJoin={canJoin} startForgot={loginForgot} />}
       {route.name === 'reset' && <NewPassword onDone={toProfile} />}
       {route.name === 'profile' && session && <Profile key={session.user.id} quiz={state} go={go} onSignedOut={signedOut} />}
-      {route.name === 'settings' && session && <Settings go={go} onSignedOut={signedOut} onDeleted={deleted} />}
+      {route.name === 'settings' && session && <Settings onSignedOut={signedOut} onLoggedOut={loggedOut} onDeleted={deleted} />}
       {route.name === 'member' && <PublicProfile username={route.username} loggedIn={!!session} canJoin={canJoin} go={go} />}
       {(route.name === 'community' || route.name === 'learn' || route.name === 'lab') && <TabSoon tab={route.name} />}
       {route.name === 'legal' && <Legal doc={route.doc} onBack={() => goBack(session ? '#/settings' : canJoin ? '#/join' : '#/card')} />}

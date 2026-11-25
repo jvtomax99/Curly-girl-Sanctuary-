@@ -21,6 +21,20 @@ In each project: SQL Editor, New query, paste the whole of
 `supabase/migrations/0001_phase2.sql` from the repo, Run. It should say "Success. No
 rows returned".
 
+Sign-ups start **closed** on the server: only emails on the allow-list can join. In
+`cgs-live`, SQL Editor, add yourself, Susan and any testers:
+
+```
+insert into public.signup_allowlist (email) values
+  ('YOUR_EMAIL_HERE'), ('SUSANS_EMAIL_HERE');
+```
+
+In `cgs-test` (made-up accounts only), open sign-ups:
+
+```
+update public.app_settings set signups_open = true;
+```
+
 ## 3. Sign-in settings (each project)
 
 Authentication, URL Configuration:
@@ -79,11 +93,22 @@ runs the server check against the real test project with made-up members.
 
 ## 6. Make yourself the owner (after you join)
 
-Join through the app (`#/preview`), then in `cgs-live`, SQL Editor:
+Join through the app (`#/preview`, with an allow-listed email), tap the email link,
+then in `cgs-live`, SQL Editor:
 
 ```
 insert into public.staff (member, role)
 select id, 'owner' from public.profiles where username = 'YOUR_CURLY_USERNAME';
+```
+
+## Clean-up of unconfirmed accounts
+
+Accounts whose email link was never tapped stay hidden and keep their username. To free
+them after a week, run this now and then in the SQL Editor (or schedule it with
+Supabase's Cron, under Integrations):
+
+```
+select public.purge_unconfirmed();
 ```
 
 ## Before sign-ups open to everyone
@@ -93,6 +118,9 @@ select id, 'owner' from public.profiles where username = 'YOUR_CURLY_USERNAME';
 - Resend domain verified, and a real test sign-up received its email.
 - Upgrade `cgs-live` to Pro (from $25 a month): daily backups, and it never pauses.
   Free projects pause after a week without activity.
-- Consider giving the app its own domain: today it shares jvtomax99.github.io (and
-  its browser storage) with Jose's other apps.
-- Then add the repo variable `SIGNUPS_OPEN` = `true`.
+- The app has its own domain. Today it shares jvtomax99.github.io, and that address's
+  browser storage, with Jose's other apps: a bug in any of them could read a member's
+  sign-in. A must before real members, not a nice-to-have.
+- Then open sign-ups in both places: the repo variable `SIGNUPS_OPEN` = `true` (shows
+  Join), and in `cgs-live`: `update public.app_settings set signups_open = true;`
+  (the server's own gate).

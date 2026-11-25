@@ -27,6 +27,7 @@ approves before this is used everywhere. Keep every value in one place
 | `--white` | White | #FFFFFF | Text on Deep Teal and Soft Coral; answer cards |
 | `--black` | Black | #000000 | Only the opening's fade to black |
 | `--cocoa-line` | Cocoa at 18% | rgba(90, 42, 30, 0.18) | Thin rules between Curly ID Card rows |
+| `--skin-1` to `--skin-5` | Avatar skin tones (added, Phase 2) | #C68654, #E2A97E, #8D5A37, #F6D3B3, #5C3A24 | Only the stand-in default avatar's face, never behind text. `--skin-1`, the default, is the middle tone; to be replaced with Susan's avatar art |
 
 ## Text and background pairs
 

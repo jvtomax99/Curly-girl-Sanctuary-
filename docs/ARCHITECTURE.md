@@ -65,14 +65,18 @@ no backend and behaves as in Phase 1.
 ## Phase 2: members (Supabase)
 
 - `supabase/migrations/0001_phase2.sql`: every table and rule. `profiles`
-  (curly username, avatar; readable by all), `members_private` (names and
-  sign-up yeses; owner only), `profile_items` (one row per item: card,
+  (curly username, avatar; readable by all once the email is confirmed),
+  `members_private` (names and sign-up yeses; owner only; names are removed
+  from the sign-in record at sign-up), `app_settings` and
+  `signup_allowlist` (the server's sign-up gate; no app access), `profile_items` (one row per item: card,
   scalp, heritage, kit, each with its visibility; heritage forced to
   only_me on insert), `staff`, `products`, `kit_products`, `kit_tools`.
   `can_see(owner, item)` is the one visibility check. Functions:
   `username_available`, `search_products`, `approve_product`,
-  `merge_products`, `delete_my_account`. Sign-up runs `handle_new_user`,
-  which refuses an account without the age and guidelines yeses. Jose
+  `merge_products`, `purge_unconfirmed`, `delete_my_account`. Sign-up runs
+  `handle_new_user`, which refuses an account while sign-ups are closed
+  (unless allow-listed) or without the age and guidelines yeses;
+  `handle_confirmed_user` shows the profile once the email is confirmed. Jose
   pastes this file into each project (`docs/backend-setup.md`).
 - `supabase/tests/`: `stub-auth.sql` (a stand-in for Supabase's sign-in
   tables) and `rules.sql` (made-up members A and B, a half-made account and
@@ -80,8 +84,10 @@ no backend and behaves as in Phase 1.
   `tools/db-check.sh` runs them on a throwaway Postgres; CI runs it too.
 - `src/backend.ts`: the Supabase connection (session stored as `cgs.auth`,
   code-in-address sign-in links), and every call the screens make. Also the
-  sign-up gate: `signupsOpen()` is true with `VITE_SIGNUPS_OPEN=true`, or on
-  one phone after visiting `#/preview` (shows a "Testing only" banner).
+  screen side of the sign-up gate: `signupsOpen()` is true with
+  `VITE_SIGNUPS_OPEN=true`, or on one phone after visiting `#/preview`
+  (shows a "Testing only" banner). The server's gate is what actually stops
+  sign-ups.
   `MIN_AGE` (16, a stand-in) and `POLICY_VERSION` live here.
 - `src/engine/profile.ts`: username rules, quiz answers to profile items
   (heritage always Only me, the traditions note never sent), turning server
@@ -117,6 +123,8 @@ no backend and behaves as in Phase 1.
 - The site check needs a fresh `npm run build` first; it checks `dist/`.
 - Playwright can't see requests that pass through the offline worker, so the
   member walk-through blocks the worker (`serviceWorkers: 'block'`).
+- The offline worker saves a page under its address without `?…`, so email
+  links' one-time codes never pile up in the saved copy.
 - Postgres refuses to run as root; `tools/db-check.sh` switches to the
   `postgres` user in a container.
 - Fonts on the shared card picture load through `document.fonts.load`

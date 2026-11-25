@@ -17,15 +17,20 @@ The plan comes from Susan's "App Build Brief v2" (November 2026),
 summarized in `SPEC.md`. The PDF itself stays out of the repo (her
 document; the repo is public). Jose, 2026-11-25: "just webapp for now".
 Phase 1 (opening, quiz, Curly ID Card, tips) went live 2026-11-25, with
-no server. **Next:** pick the backend (`SPEC.md`, "Decisions waiting"),
-then plan Phase 2.
+no server. Backend picked 2026-11-25: Supabase, with Resend for sign-up
+email. **Now:** Phase 2 (`docs/phase2-plan.md`); see `HANDOFF.md`.
 
 ## Rules for this repo
 
-- **Web app only, no server yet** (Jose, 2026-11-25). No accounts,
-  database, uploads or outside services until Jose picks a backend, which
-  is due before Phase 2. Quiz answers stay on the phone (`cgs.quiz.v1`);
-  a change to its shape must still read old saves.
+- **Web app on Supabase** (Jose, 2026-11-25). Accounts and profiles live
+  in Supabase; every rule about who sees what is in
+  `supabase/migrations/`, each rule change with a check in
+  `supabase/tests/rules.sql` (`bash tools/db-check.sh`). No uploads until
+  Phase 4 (with moderation), no other outside services without asking.
+  Sign-ups stay closed on the server (`app_settings`) until Susan's
+  policy, terms, guidelines and the minimum age exist. Quiz answers stay
+  on the phone (`cgs.quiz.v1`) until the person joins; a change to its
+  shape must still read old saves.
 - **This one has a build step** (Jose picked it, 2026-11-25): React,
   TypeScript and Vite, like Marcela's Closet. Edit `src/`, never `dist/`.
   The card's rules stay plain TypeScript in `src/engine/`, each rule

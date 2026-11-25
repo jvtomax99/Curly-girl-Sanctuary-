@@ -5,12 +5,12 @@ import { normalizeUsername, usernameProblem } from '../engine/profile'
 import Avatar, { AVATARS } from './Avatar'
 
 interface Props {
-  go: (hash: string) => void
   onSignedOut: () => void
+  onLoggedOut: () => void
   onDeleted: (clearQuiz: boolean) => void
 }
 
-export default function Settings({ go, onSignedOut, onDeleted }: Props) {
+export default function Settings({ onSignedOut, onLoggedOut, onDeleted }: Props) {
   const [me, setMe] = useState<MyProfile | null>(null)
   const [f, setF] = useState({ username: '', avatar: 'curls-1', firstName: '', lastName: '' })
   const [msg, setMsg] = useState('')
@@ -91,7 +91,7 @@ export default function Settings({ go, onSignedOut, onDeleted }: Props) {
         <a href="#/privacy">Privacy policy</a>
         <a href="#/terms">Terms</a>
       </div>
-      <button className="btn btn-plain btn-wide" onClick={async () => { await logOut(); onSignedOut(); go('#/card') }}>Log out</button>
+      <button className="btn btn-plain btn-wide" onClick={async () => { await logOut(); onLoggedOut() }}>Log out</button>
 
       <section className="danger" aria-labelledby="del-title">
         <h2 id="del-title">Delete my account</h2>

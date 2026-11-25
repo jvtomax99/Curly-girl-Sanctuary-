@@ -39,6 +39,18 @@ grant execute on all functions in schema t to anon, authenticated;
 \set B '''bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'''
 \set D '''dddddddd-dddd-dddd-dddd-dddddddddddd'''
 
+-- Sign-ups start closed: only allow-listed emails can join.
+select t.refused($$insert into auth.users (id, email, raw_user_meta_data) values ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'stranger@example.test',
+  '{"username":"stranger","first_name":"No","last_name":"Yes","age_ok":true,"guidelines_ok":true}')$$, 'sign-up while closed');
+insert into public.signup_allowlist (email) values ('tester@example.test');
+insert into auth.users (id, email, email_confirmed_at, raw_user_meta_data) values ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'Tester@Example.test', now(),
+  '{"username":"tester","first_name":"Tess","last_name":"Madeup","age_ok":true,"guidelines_ok":true}');
+select t.ok(exists (select 1 from public.profiles where username = 'tester'), 'an allow-listed email joins while closed');
+select t.ok((select raw_user_meta_data ? 'first_name' or raw_user_meta_data ? 'last_name' from auth.users where email = 'Tester@Example.test') = false,
+  'names are removed from the sign-in record');
+select t.ok((select first_name from public.members_private where id = 'cccccccc-cccc-cccc-cccc-cccccccccccc') = 'Tess', 'names kept for the member');
+update public.app_settings set signups_open = true;
+
 -- Sign-up refuses an account without both yeses, or with a taken or bad username.
 select t.refused($$insert into auth.users (id, raw_user_meta_data) values ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
   '{"username":"nope","first_name":"No","last_name":"Yes","age_ok":true}')$$, 'sign-up without guidelines');
@@ -47,10 +59,14 @@ select t.refused($$insert into auth.users (id, raw_user_meta_data) values ('eeee
 select t.refused($$insert into auth.users (id, raw_user_meta_data) values ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
   '{"username":"no spaces!","first_name":"No","last_name":"Yes","age_ok":true,"guidelines_ok":true}')$$, 'bad username');
 
-insert into auth.users (id, raw_user_meta_data) values
-  (:A, '{"username":"Coily.Ana","first_name":"Ana","last_name":"Testperson","age_ok":true,"guidelines_ok":true}'),
-  (:B, '{"username":"wavy_bea","first_name":"Bea","last_name":"Madeup","age_ok":true,"guidelines_ok":true}'),
-  (:D, '{"username":"halfmade","first_name":"Dee","last_name":"Stub","age_ok":true,"guidelines_ok":true}');
+insert into auth.users (id, email, email_confirmed_at, raw_user_meta_data) values
+  (:A, 'ana@example.test', now(), '{"username":"Coily.Ana","first_name":"Ana","last_name":"Testperson","age_ok":true,"guidelines_ok":true}'),
+  (:B, 'bea@example.test', now(), '{"username":"wavy_bea","first_name":"Bea","last_name":"Madeup","age_ok":true,"guidelines_ok":true}'),
+  (:D, 'dee@example.test', now(), '{"username":"halfmade","first_name":"Dee","last_name":"Stub","age_ok":true,"guidelines_ok":true}');
+-- U joined but never tapped the email link.
+\set U '''ffffffff-ffff-ffff-ffff-ffffffffffff'''
+insert into auth.users (id, email, raw_user_meta_data) values
+  (:U, 'typo@example.test', '{"username":"unconfirmed","first_name":"Una","last_name":"Madeup","age_ok":true,"guidelines_ok":true}');
 select t.refused($$insert into auth.users (id, raw_user_meta_data) values ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
   '{"username":"WAVY_bea","first_name":"No","last_name":"Yes","age_ok":true,"guidelines_ok":true}')$$, 'taken username (any case)');
 select t.ok((select username from public.profiles where id = :A) = 'coily.ana', 'username saved in lower case');
@@ -104,7 +120,48 @@ select t.ok((select string_agg(item::text, ',') from public.profile_items where 
 select t.refused($$insert into public.profile_items (member, item) values ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'card')$$,
   'an account without a profile adds items');
 
+-- Unconfirmed accounts: invisible to others, but their username stays taken.
 reset role;
+set role authenticated;
+select set_config('request.jwt.claims', '{"sub":"ffffffff-ffff-ffff-ffff-ffffffffffff"}', false);
+select t.refused($$insert into public.profile_items (member, item) values ('ffffffff-ffff-ffff-ffff-ffffffffffff', 'card')$$,
+  'an unconfirmed account adds items');
+select t.ok(exists (select 1 from public.profiles where id = :U), 'an unconfirmed member sees their own profile');
+reset role;
+insert into public.profile_items (member, item, value, visibility) values (:U, 'scalp', '{"scalp":"oily"}', 'everyone');
+set role authenticated;
+select set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"}', false);
+select t.ok(not exists (select 1 from public.profiles where id = :U), 'B can''t see an unconfirmed profile');
+select t.ok(not exists (select 1 from public.profile_items where member = :U), 'B can''t see an unconfirmed member''s items');
+select t.refused($$select public.purge_unconfirmed()$$, 'a non-moderator purges accounts');
+reset role;
+set role anon;
+select set_config('request.jwt.claims', '', false);
+select t.ok(not exists (select 1 from public.profiles where id = :U), 'a visitor can''t see an unconfirmed profile');
+select t.ok(not exists (select 1 from public.profile_items where member = :U), 'a visitor can''t see an unconfirmed member''s Everyone items');
+select t.ok(not public.username_available('unconfirmed'), 'an unconfirmed username stays taken');
+select t.refused($$select * from public.app_settings$$, 'a visitor reads the sign-up setting');
+select t.refused($$insert into public.signup_allowlist values ('me@example.test')$$, 'a visitor adds to the allow-list');
+reset role;
+set role authenticated;
+select set_config('request.jwt.claims', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"}', false);
+select t.refused($$update public.app_settings set signups_open = false$$, 'a member changes the sign-up setting');
+select t.refused($$update public.profiles set confirmed = true where id = 'ffffffff-ffff-ffff-ffff-ffffffffffff'$$, 'a member confirms a profile');
+reset role;
+update auth.users set email_confirmed_at = now() where id = :U;
+set role anon;
+select t.ok(exists (select 1 from public.profile_items where member = :U), 'tapping the email link makes the profile visible');
+reset role;
+-- A week-old unconfirmed account is removed by the clean-up; a newer one stays.
+insert into auth.users (id, email, created_at, raw_user_meta_data) values
+  ('99999999-9999-9999-9999-999999999999', 'old@example.test', now() - interval '8 days',
+   '{"username":"oldtypo","first_name":"Old","last_name":"Madeup","age_ok":true,"guidelines_ok":true}'),
+  ('88888888-8888-8888-8888-888888888888', 'new@example.test', now(),
+   '{"username":"newtypo","first_name":"New","last_name":"Madeup","age_ok":true,"guidelines_ok":true}');
+select set_config('request.jwt.claims', '', false);
+select t.ok(public.purge_unconfirmed() = 1, 'the clean-up removes exactly the week-old unconfirmed account');
+select t.ok(public.username_available('oldtypo') and not public.username_available('newtypo'), 'the clean-up frees only that username');
+
 set role anon;
 select set_config('request.jwt.claims', '', false);
 select t.ok((select string_agg(item::text, ',') from public.profile_items where member = :A) = 'scalp',

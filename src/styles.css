@@ -140,6 +140,7 @@ button { cursor: pointer; }
 }
 .opening.is-start .op-start { opacity: 1; pointer-events: auto; }
 .op-start .btn { font-size: 22px; padding: 16px 40px; background: var(--mustard); }
+.op-start .op-login { font-size: 16px; padding: 10px 22px; background: var(--cream-light); }
 @media (prefers-reduced-motion: reduce) {
   .op-line-up, .op-line-down { transform: none; }
   .op-line { transition: opacity 1.2s ease; }
@@ -338,5 +339,8 @@ button { cursor: pointer; }
   min-height: 56px; display: flex; align-items: center; justify-content: center; color: var(--cocoa);
   font-weight: 700; font-size: 14px; text-decoration: none;
 }
-.tab[aria-current='page'] { background: var(--cream); }
+.tab { flex-direction: column; gap: 4px; }
+/* DESIGN.md: the current tab's dot in Sunset Orange. */
+.tab::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: transparent; }
+.tab[aria-current='page']::after { background: var(--sunset-orange); }
 .soon-tab p { text-align: center; }

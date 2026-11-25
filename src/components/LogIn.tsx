@@ -7,12 +7,14 @@ interface Props {
   onLoggedIn: () => void
   note?: string
   canJoin: boolean
+  /** Opens on "Forgot password?" (after a reset link that couldn't be used here). */
+  startForgot?: boolean
 }
 
-export default function LogIn({ go, onLoggedIn, note, canJoin }: Props) {
+export default function LogIn({ go, onLoggedIn, note, canJoin, startForgot = false }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [forgot, setForgot] = useState(false)
+  const [forgot, setForgot] = useState(startForgot)
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)

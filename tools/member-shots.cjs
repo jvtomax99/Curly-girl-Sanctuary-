@@ -143,7 +143,11 @@ async function run(width, height, tag, server) {
   // ---- Log in, wrong then right (B)
   stage = 'Log in, wrong then right (B)'
   const b2 = await open('B again')
-  await b2.goto(BASE + '#/login')
+  // A returning member on a new phone: the opening offers Log in (preview on).
+  await b2.goto(BASE + '#/preview')
+  await b2.reload()
+  await tap(b2.getByRole('button', { name: 'Already a member? Log in' }))
+  await b2.getByRole('heading', { name: 'Welcome back' }).waitFor()
   await b2.getByLabel('Email').fill('bea@example.test')
   await b2.getByLabel('Password').fill('nope-nope')
   await b2.getByRole('button', { name: 'Log in' }).click()
@@ -152,18 +156,27 @@ async function run(width, height, tag, server) {
   await b2.getByLabel('Password').fill('made-up-pass-1')
   await b2.getByRole('button', { name: 'Log in' }).click()
   await b2.getByRole('heading', { name: '@wavy_bea' }).waitFor()
+  await tap(b2.getByRole('button', { name: 'Settings' }))
+  await tap(b2.getByRole('button', { name: 'Log out' }))
+  await b2.getByRole('button', { name: 'Start the quiz' }).waitFor()
+  await b2.goBack()
+  await b2.waitForTimeout(300)
+  check(!(await b2.getByRole('heading', { name: 'Settings' }).isVisible()), `${tag}: Back after log out reopens Settings`)
 
   // ---- Without preview, the live app keeps "Join" on the coming-soon page
   stage = 'Without preview, the live app keeps "Join" on the coming-soon page'
   const c = await open('closed')
-  await c.goto(BASE)
-  await c.evaluate((q) => localStorage.setItem('cgs.quiz.v1', q), QUIZ)
+  await c.addInitScript((q) => localStorage.setItem('cgs.quiz.v1', q), QUIZ)
   await c.goto(BASE + '#/card')
-  await c.reload()
   await c.getByRole('button', { name: 'Join the Sanctuary' }).click()
   await c.getByText('opens').first().waitFor()
   check(!(await c.getByText('Testing only').isVisible()), `${tag}: preview banner shows without preview`)
   check(!(await c.getByRole('button', { name: 'Already a member? Log in' }).isVisible()), `${tag}: Log in shows before sign-ups open`)
+  const d = await open('closed opening')
+  await d.goto(BASE)
+  await d.getByRole('button', { name: 'Skip' }).click()
+  await d.getByRole('button', { name: 'Start the quiz' }).waitFor()
+  check(!(await d.getByRole('button', { name: 'Already a member? Log in' }).isVisible()), `${tag}: opening shows Log in before sign-ups open`)
 
   await browser.close()
 }
