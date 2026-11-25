@@ -25,6 +25,8 @@ approves before this is used everywhere. Keep every value in one place
 | `--cocoa` | Cocoa (added) | #5A2A1E | All body text and outlines |
 | `--deep-teal` | Deep Teal (added) | #1B7A69 | Secondary buttons (white text) |
 | `--white` | White | #FFFFFF | Text on Deep Teal and Soft Coral; answer cards |
+| `--black` | Black | #000000 | Only the opening's fade to black |
+| `--cocoa-line` | Cocoa at 18% | rgba(90, 42, 30, 0.18) | Thin rules between Curly ID Card rows |
 
 ## Text and background pairs
 
@@ -62,7 +64,11 @@ the matches; fonts in AI-made images may not be real fonts).
 
 - Flat, rounded shapes, thin Cocoa outlines, leaf borders.
 - The Curly ID Card keeps its chunky retro lettering: a Coral Pink and
-  Tangerine diagonal block with "Curly ID Card", the rows on Cream.
+  Tangerine diagonal block with "Curly ID Card" in Mustard letters outlined
+  and shadowed in Cocoa (decoration, large and bold only; the outline
+  carries the contrast), the rows on Cream. The shared picture
+  (`src/cardImage.ts`) repeats these colors as hex codes, because a canvas
+  can't read CSS variables: change both together.
 - Cream Light for reading screens; bright orange, pink and teal for
   headers, the splash and illustration, so hair photos stay the stars.
 - Photos show real curls in every texture and shade.

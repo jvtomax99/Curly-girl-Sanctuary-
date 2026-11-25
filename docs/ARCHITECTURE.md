@@ -22,7 +22,11 @@ analytics. Quiz answers live only in the phone's localStorage.
   works: `#/` opening, `#/quiz/N`, `#/card`, `#/tips`, `#/soon`. A fresh
   launch with a finished quiz opens the card; a started one resumes. No
   skipping ahead past an unanswered question; no card before the quiz is
-  done.
+  done. The question on screen comes from the address (`quizStep`), never
+  from `state.step`, which only remembers it for the next launch. Forward
+  moves add a history step that remembers where it came from (`go`); the
+  app's own Back buttons step back through history when that leads to the
+  right screen (`goBack`), so the phone's Back gesture keeps going back.
 - `src/data/quiz.ts`: the 10 questions and every quiz word, the stand-in
   heritage list, curl types 2A to 4C.
 - `src/data/tips.ts`: tips by group (wavy 2, curly 3, coily 4, and
@@ -44,9 +48,13 @@ analytics. Quiz answers live only in the phone's localStorage.
   shares it through the phone's share sheet, or downloads it.
 - `public/`: copied into `dist/` as is: `sw.js` (offline worker, from
   Marcela's Closet: network first, 4 s on a weak signal, its own cache
-  only), `manifest.webmanifest`, `icon.svg` and the PNG icons made from it
+  only; on install it saves the folder page, its built files and the
+  WOFF2 fonts the stylesheet names, so one visit is enough to work
+  offline; each saved page drops the old builds' files), `manifest.webmanifest`, `icon.svg` and the PNG icons made from it
   by `tools/make-icons.cjs`.
-- `tools/shots.cjs`: the walk-through with screenshots and checks.
+- `tools/shots.cjs`: the walk-through with screenshots and checks, plus
+  the cases a review found (offline after one visit, the heritage switch,
+  Back after the in-app Back).
 - `.github/site-check.cjs`: opens screens of the built app at phone and
   desktop width and fails on missing files or script errors.
   `.github/workflows/check.yml` runs it with the tests on pull requests.

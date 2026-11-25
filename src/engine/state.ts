@@ -84,6 +84,8 @@ export function choose(s: QuizState, id: QuestionId, value: string): QuizState {
   else if (value === 'prefer-not') next = ['prefer-not'] // "Prefer not to say" clears the rest
   else next = [...now.filter((x) => x !== 'prefer-not'), value]
   const out: QuizState = { ...s, answers: { ...s.answers, [id]: next } }
-  if (id === 'heritage' && next.includes('prefer-not')) out.showHeritage = false
+  // The switch never stays on without something to show: clearing every pick (or "Prefer
+  // not to say") turns it off, so a later pick needs a fresh yes.
+  if (id === 'heritage' && (next.length === 0 || next.includes('prefer-not'))) out.showHeritage = false
   return out
 }

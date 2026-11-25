@@ -1,4 +1,4 @@
-// Site check: run on every pull request (.github/workflows/site-check.yml).
+// Site check: run on every pull request (.github/workflows/check.yml and pages.yml).
 // For a GitHub Pages site, merging is going live, so this catches a broken
 // page before it ships. Two parts:
 //  1. Files: every relative src/href in the pages points at a file that

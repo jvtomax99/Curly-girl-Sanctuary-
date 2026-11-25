@@ -98,7 +98,53 @@ async function reducedMotion() {
   await browser.close()
 }
 
+// Cases a review found (2026-11-25): offline after one visit, the heritage switch,
+// and the phone's Back gesture after the in-app Back.
+async function reviewCases() {
+  const browser = await chromium.launch()
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+  const page = await ctx.newPage()
+  page.on('pageerror', (e) => problems.push(`review cases page error: ${e.message}`))
+  await page.goto(BASE)
+  await page.evaluate(() => navigator.serviceWorker.ready)
+  await page.waitForTimeout(1000)
+  await ctx.setOffline(true)
+  const ok = await page.reload().then(() => true, () => false)
+  if (!ok || !(await page.locator('.opening').count())) problems.push('offline after one visit: the app did not open')
+  const fonts = await page.evaluate(async () => (await caches.keys()).length && (await (await caches.open((await caches.keys())[0])).keys()).filter((k) => k.url.endsWith('.woff2')).length)
+  if (!fonts) problems.push('offline after one visit: no fonts saved')
+  await ctx.setOffline(false)
+
+  await page.goto(BASE + '#/quiz/0')
+  const next = () => page.getByRole('button', { name: 'Next' }).click()
+  await page.getByRole('button', { name: 'Curl type 4C' }).click(); await next()
+  await page.getByRole('button', { name: /^Low/ }).click(); await next()
+  await page.getByRole('button', { name: /^Coarse/ }).click(); await next()
+  await page.getByRole('button', { name: /^Hardly any/ }).click(); await next()
+  // Heritage: switch on, clear the pick, pick again: the switch must be off.
+  const sw = page.getByRole('switch')
+  const box = await sw.boundingBox()
+  if (!box || box.height < 44) problems.push(`heritage switch is ${box && box.height}px tall`)
+  await page.getByRole('button', { name: 'African', exact: true }).click()
+  await page.getByText('Show heritage on my card').click()
+  if ((await sw.getAttribute('aria-checked')) !== 'true') problems.push('tapping the switch words did not turn it on')
+  await page.getByRole('button', { name: 'African', exact: true }).click()
+  await page.getByRole('button', { name: 'Caribbean' }).click()
+  if ((await sw.getAttribute('aria-checked')) !== 'false') problems.push('heritage switch stayed on after clearing the picks')
+  await next()
+  await page.getByRole('button', { name: /^Once a week/ }).click(); await next()
+  // Now on question 7: in-app Back to 6, then the phone's Back should reach 5.
+  await page.getByRole('button', { name: 'Back' }).click()
+  const a = await page.locator('.quiz-count').innerText()
+  await page.goBack()
+  await page.waitForTimeout(200)
+  const b = await page.locator('.quiz-count').innerText()
+  if (!a.startsWith('6 of') || !b.startsWith('5 of')) problems.push(`Back: in-app went to "${a}", phone Back then went to "${b}" (want 6, then 5)`)
+  await browser.close()
+}
+
 ;(async () => {
+  await reviewCases()
   await run(390, 844, 'phone')
   await run(1440, 900, 'desktop')
   await reducedMotion()

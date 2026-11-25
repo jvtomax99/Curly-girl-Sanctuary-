@@ -37,6 +37,15 @@ describe('Curly ID Card', () => {
     expect(canShowHeritage(s)).toBe(false)
   })
 
+  it('turns the heritage switch off when every pick is cleared, so a new pick needs a fresh yes', () => {
+    let s = choose(fresh(), 'heritage', 'african')
+    s = { ...s, showHeritage: true }
+    s = choose(s, 'heritage', 'african')
+    expect(s.showHeritage).toBe(false)
+    s = choose(s, 'heritage', 'caribbean')
+    expect(heritageText(s)).toBeNull()
+  })
+
   it('shows "Not sure" for unanswered or not-sure rows', () => {
     const s = choose(fresh(), 'pattern', 'not-sure')
     expect(cardRows(s).map((r) => r.value)).toEqual(['Not sure', 'Not sure', 'Not sure', 'Not sure', 'Not sure'])

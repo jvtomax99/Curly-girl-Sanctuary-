@@ -12,8 +12,17 @@ const NETWORK_WAIT_MS = 4000
 const SLOW = 'slow'
 const FAILED = 'failed'
 
-self.addEventListener('install', () => self.skipWaiting())
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()))
+// On install, save the app's folder page and every built file it needs, so the app opens
+// offline after a single visit (someone adds it to the home screen, then has no signal).
+self.addEventListener('install', (event) => {
+  self.skipWaiting()
+  event.waitUntil(
+    fetch(SCOPE, { cache: 'no-cache', credentials: 'same-origin' })
+      .then((response) => (response.ok ? savePage(new Request(SCOPE), response) : undefined))
+      .catch(() => undefined),
+  )
+})
+self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()))
 
 self.addEventListener('fetch', (event) => {
   const { request } = event
@@ -79,14 +88,35 @@ async function save(request, response) {
 async function savePage(request, response) {
   const html = await response.clone().text()
   const cache = await caches.open(CACHE)
+  const assets = `${SCOPE}assets/`
   const files = [...html.matchAll(/(?:src|href)=["'](\.?\/?assets\/[^"'?#]+)/g)].map((m) => new URL(m[1], SCOPE).href)
+  const keep = new Set(files)
   for (const url of files) {
-    if (await cache.match(url, { ignoreVary: true })) continue
-    const file = await fetch(url)
-    if (!file.ok) throw new Error(`Missing ${url}`)
-    await cache.put(url, file)
+    let file = await cache.match(url, { ignoreVary: true })
+    if (!file) {
+      file = await fetch(url)
+      if (!file.ok) throw new Error(`Missing ${url}`)
+      await cache.put(url, file.clone())
+    }
+    // The stylesheet names the font files; keep the WOFF2 ones too.
+    if (url.endsWith('.css')) {
+      const css = await file.text()
+      for (const m of css.matchAll(/url\(["']?([^"')]+\.woff2)["']?\)/g)) {
+        const font = new URL(m[1], url).href
+        if (!font.startsWith(assets)) continue
+        keep.add(font)
+        if (await cache.match(font, { ignoreVary: true })) continue
+        const f = await fetch(font)
+        if (f.ok) await cache.put(font, f)
+      }
+    }
   }
   await cache.put(request, response)
+  // Built files get a new name every version: drop the ones this version no longer uses,
+  // so the copy doesn't grow with every release. Only this app's own cache is touched.
+  for (const key of await cache.keys()) {
+    if (key.url.startsWith(assets) && !keep.has(key.url)) await cache.delete(key)
+  }
 }
 
 async function savedCopy(request) {

@@ -8,25 +8,27 @@ import { canShowHeritage } from '../engine/card'
 import CurlArt from './CurlArt'
 
 interface Props {
+  /** The question on screen (from the address). */
+  step: number
   state: QuizState
   onChange: (s: QuizState) => void
   onBack: () => void
   onNext: () => void
 }
 
-export default function Quiz({ state, onChange, onBack, onNext }: Props) {
-  const q = QUESTIONS[state.step]
+export default function Quiz({ step, state, onChange, onBack, onNext }: Props) {
+  const q = QUESTIONS[step]
   const picked = state.answers[q.id] ?? []
   const titleRef = useRef<HTMLHeadingElement>(null)
 
   // Move focus to the new question so screen readers announce it.
   useEffect(() => {
     titleRef.current?.focus()
-  }, [state.step])
+  }, [step])
 
   const pick = (value: string) => onChange(choose(state, q.id, value))
   const isOn = (value: string) => picked.includes(value)
-  const last = state.step === QUESTIONS.length - 1
+  const last = step === QUESTIONS.length - 1
 
   return (
     <main className="screen">
@@ -35,11 +37,11 @@ export default function Quiz({ state, onChange, onBack, onNext }: Props) {
           &#8592; Back
         </button>
         <span className="quiz-count" style={{ marginLeft: 'auto' }}>
-          {state.step + 1} of {QUESTIONS.length}
+          {step + 1} of {QUESTIONS.length}
         </span>
       </div>
-      <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={QUESTIONS.length} aria-valuenow={state.step + 1} aria-label="Quiz progress">
-        <span style={{ width: `${((state.step + 1) / QUESTIONS.length) * 100}%` }} />
+      <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1} aria-label="Quiz progress">
+        <span style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }} />
       </div>
 
       <h1 className="q-title" tabIndex={-1} ref={titleRef}>
@@ -79,17 +81,16 @@ export default function Quiz({ state, onChange, onBack, onNext }: Props) {
               onChange={(e) => onChange({ ...state, traditionsNote: e.target.value })}
             />
           </label>
-          <div className="switch-row">
-            <span id="show-heritage">Show heritage on my card</span>
-            <button
-              className="switch"
-              role="switch"
-              aria-checked={state.showHeritage}
-              aria-labelledby="show-heritage"
-              disabled={!canShowHeritage(state)}
-              onClick={() => onChange({ ...state, showHeritage: !state.showHeritage })}
-            />
-          </div>
+          <button
+            className="switch-row"
+            role="switch"
+            aria-checked={state.showHeritage}
+            disabled={!canShowHeritage(state)}
+            onClick={() => onChange({ ...state, showHeritage: !state.showHeritage })}
+          >
+            <span>Show heritage on my card</span>
+            <span className="switch" aria-hidden="true" />
+          </button>
         </>
       )}
 

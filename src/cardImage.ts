@@ -3,6 +3,7 @@
 // isn't possible. Nothing is uploaded.
 import type { CardRow } from './engine/card'
 
+// The same colors as DESIGN.md and src/styles.css (a canvas can't read CSS variables).
 const C = {
   orange: '#E86326',
   tangerine: '#F18B25',
