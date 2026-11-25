@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.local
+*.log
+.DS_Store
+*.zip
+.env
+.env.*
+*.pem
+# Owner documents and real members' data never go in this public repo.
+*.pdf
+exports/
