@@ -201,7 +201,13 @@ brief's suggestion). No Shop in v1.
 
 ## Decisions waiting (Jose)
 
-1. **Backend, before Phase 2.** Decided 2026-11-25: a web app for now,
+1. **Backend: Supabase** (Jose, 2026-11-25). Free plan while building
+   Phase 2; Pro (from $25 a month, daily backups, never paused) before
+   real members join, Phase 6 at the latest. Free projects pause after a
+   week without activity and have no backups (supabase.com/pricing,
+   checked 2026-11-25). An app-store phone app is decided at Phase 6
+   (Apple $99 a year; Google $25 once plus a closed test of 12 testers for
+   14 days). Earlier note, kept for the record: a web app for now,
    no server. Accounts with email verification, photo (and maybe video)
    uploads, per-item privacy, filters, moderation and delete-account all
    need a server and a database. Options to compare then, with prices
@@ -250,7 +256,7 @@ or 3 similar apps, plan mode, his OK, then build.
 |---|---|---|
 | 0 | Web app chosen; React, TypeScript, Vite on GitHub Pages (2026-11-25) | Done |
 | 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend; "Join the Sanctuary" opens a coming-soon page) | Done: live 2026-11-25 |
-| 2 | Backend picked; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
+| 2 | Supabase backend; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms | Not started |
 | 3 | Learn: Holy Grail, Around the World starter pages, mixed curls, vitamins (behind the reviewer) | Not started |
 | 4 | Community with safety: Hair Posts, Ask the Sanctuary, report, block, mute, moderation queue (Tutorials if kept in v1) | Not started |
 | 5 | Curl Lab first modules | Not started |
