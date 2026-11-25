@@ -26,7 +26,15 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run typecheck
+      # The Supabase project address and its public key (made to be in the browser; the
+      # server's rules protect the data). Empty until Jose adds the repo variables, and
+      # then the app simply has no backend, as in Phase 1. SIGNUPS_OPEN stays unset until
+      # Susan's policy, terms, guidelines and the minimum age exist.
       - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_KEY: ${{ vars.SUPABASE_PUBLIC_KEY }}
+          VITE_SIGNUPS_OPEN: ${{ vars.SIGNUPS_OPEN }}
       # Nothing is published if any screen has a script error or a missing file.
       - name: Install the browser
         run: |

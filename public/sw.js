@@ -74,7 +74,10 @@ function fromNetwork(event, request) {
     if (response.ok) {
       const copy = response.clone()
       const isPage = (response.headers.get('content-type') ?? '').includes('text/html')
-      event.waitUntil((isPage ? savePage(request, copy) : save(request, copy)).catch(() => undefined))
+      // A page is saved under its address without ?…: email links carry one-time codes
+      // (?code=…), which must not pile up in the saved copy.
+      const key = isPage ? new Request(request.url.split('?')[0]) : request
+      event.waitUntil((isPage ? savePage(key, copy) : save(request, copy)).catch(() => undefined))
     }
     return response
   })
