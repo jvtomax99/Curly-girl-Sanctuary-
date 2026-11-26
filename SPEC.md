@@ -58,12 +58,13 @@ brief's suggestion). No Shop in v1.
   bathroom mirror, hands in her frizzy curls) with "Tap to start" and
   "Start without sound", because a phone only plays sound after a tap.
   Then the intro film (Jose and Susan, 2026-11-26: 14 s, photoreal, music
-  only, no spoken words): an invented woman in her early 30s with an office
-  job who is still figuring out her curls. Five scenes: the morning mirror;
+  only, no spoken words): a woman in her early 30s with an office job who
+  is still figuring out her curls. She is made to resemble Susan's painted
+  avatar (copper spiral curls, dark roots, a curly fringe). Five scenes: the morning mirror;
   her hair hidden in a bun at work, one curl escaping; evening on the sofa,
   hair down, her phone; wash day, the curls forming; she walks into work
   with her curls out and colleagues with coils and waves smile. Nobody in
-  it is a real person. It fades to black (about 1.5 s), black to Soft
+  it was filmed: every person is generated. It fades to black (about 1.5 s), black to Soft
   Coral Pink (about 2 s); "Hey beautiful," slides up and "Love the Curls"
   slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
   script; the words fade and only a centred "Start the quiz" stays. Small
