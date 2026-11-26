@@ -91,8 +91,11 @@ same time. Holy Grail's carpet roll-out is optional.
 
 The one painted part of the app, and only in the opening; everything after
 it stays flat and retro. The look (Jose, 2026-11-26: "colorful and warm but
-with high details"): rich hand-painted gouache, glossy sharply drawn spiral
-curls with golden highlights, golden hour light, saturated sunset colours.
+with high details", then "more realistic visually"): a semi-realistic
+painting. Lifelike skin with soft shading, real facial proportions, hair
+painted strand by strand as glossy spiral curls with golden rim light,
+golden hour light, saturated sunset colours. Still clearly a painting,
+never a photograph.
 Susan's avatar: big copper spiral curls with darker roots and a curly
 fringe, large brown eyes, rosy cheeks, gold hoops, two thin gold necklaces,
 a tangerine top. The Sanctuary: a sunset orange wall, a cream arch around a

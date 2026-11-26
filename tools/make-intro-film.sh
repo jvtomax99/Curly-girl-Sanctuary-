@@ -21,10 +21,10 @@ FIT="fps=30,scale=$W:$H:force_original_aspect_ratio=increase,crop=$W:$H,setsar=1
 # name, start in the source, length taken from the source, length in the film (seconds)
 SHOTS=(
   "v1 ${V1:-0.2 3.2 3.0}"
-  "v2 ${V2:-2.4 2.0 2.0}"
+  "v2 ${V2:-0.3 2.0 2.0}"
   "PLATE 0 0 4.4"
-  "v3 ${V3:-0.2 2.6 2.6}"
-  "v4 ${V4:-1.5 3.1 3.0}"
+  "v3 ${V3:-1.2 2.6 2.6}"
+  "v4 ${V4:-1.9 3.1 3.0}"
 )
 LEN=15
 MUSIC_FROM="${MUSIC_FROM:-0}"
