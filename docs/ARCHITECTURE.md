@@ -44,8 +44,10 @@ no backend and behaves as in Phase 1.
 - `src/engine/card.ts`: what the Curly ID Card shows (`cardRows`),
   heritage only with the switch on and never for "Prefer not to say",
   `group` for the tips. Tests: `src/engine/card.test.ts`.
-- `src/components/`: `Opening` (stages video, black, pink, words, start on
-  timers; Skip; CSS cross-fades under reduce motion), `Quiz` (one question
+- `src/components/`: `Opening` (stages gate, film, black, pink, words, start:
+  the gate waits for a tap, the film's end starts the timers; Skip; no film
+  (it isn't even downloaded) and CSS cross-fades under reduce motion or data
+  saver; a film that can't start or stops moving is stopped and passed over), `Quiz` (one question
   per screen, curl grid drawn by `CurlArt`, chips for multi-select, the
   heritage box and switch), `IdCard`, `CardScreen`, `Tips`, `Soon`,
   `NotFound` (any `#/` address that isn't a screen, and where `public/404.html`
@@ -62,6 +64,18 @@ no backend and behaves as in Phase 1.
   `og:image`), drawn from `tools/social-card.html` by `tools/make-social.cjs`;
   `404.html` (GitHub Pages' page for a missing address: it hands over to the
   app's `#/page-not-found`); `sitemap.xml` (the one address).
+- `src/components/FilmApp.tsx`: the film's app scene (the real curl picker
+  and `IdCard` with made-up answers, labelled Example), shown by `Opening`
+  on the film's clock (`APP`: picker 7.15 s, picked 8.2, card 9.15, fading
+  10.7, off 10.9). Sized in the film's own units (`--u`: `1cqw`, or
+  `min(1vw, 0.5625vh)` where container units are missing, such as iOS 15).
+  `tools/shots.cjs` checks it stays inside its sheet at four sizes, one
+  of them landscape.
+- `public/intro/`: the intro film `intro.mp4` (15 s, cinematic, 1080 by 1920, music only) and
+  `gate.webp`, its first frame, shown at the gate. Cut from the rendered
+  shots by `tools/make-intro-film.sh <folder>`; the source shots are not in
+  the repo (`CREDITS.md`). The film is not saved for offline use (the worker leaves
+  Range requests alone): without signal the opening passes over it.
 - `tools/shots.cjs`: the walk-through with screenshots and checks, plus
   the cases a review found (offline after one visit, the heritage switch,
   Back after the in-app Back).

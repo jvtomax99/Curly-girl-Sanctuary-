@@ -43,7 +43,7 @@ re-measure any new pair before using it.
 | Cream Light on Palm Green | 5.5:1 | All text (dark banners) |
 | Cocoa on White | 11.8:1 | All text (answer cards; measured 2026-11-25) |
 | Cocoa on Cream | 8.1:1 | All text (picked answers, the ID card; measured 2026-11-25) |
-| Cocoa on Peach | 4.6:1 | All text (the video placeholder's title card; measured 2026-11-25) |
+| Cocoa on Peach | 4.6:1 | All text (measured 2026-11-25) |
 | White on Soft Coral | 3.3:1 | Large or bold only (intro sequence) |
 | Cocoa on Sunset Orange | 3.5:1 | Large or bold only (headers on orange) |
 | Sunset Orange on Cream Light | 3.1:1 | Large or bold only (decoration, not text) |
@@ -86,6 +86,46 @@ Playful and short, always with a reduce-motion version (cross-fades
 instead of slides). Opening timings: fade to black about 1.5 s, black to
 Soft Coral Pink about 2 s, the two lines slide in over 1.5 to 2 s at the
 same time. Holy Grail's carpet roll-out is optional.
+
+## The opening's gate and film (2026-11-26)
+
+The one filmed-looking part of the app, and only in the opening; everything
+after it stays flat and retro. The look (Jose, 2026-11-26: "colorful and
+warm but with high details", then "more realistic visually", then "more
+realistic and a bit more dynamic"): a cinematic, near-real film still. Real
+skin and real hair strands, glossy spiral curls with golden rim light, a
+full-frame cinema camera's shallow depth of field, golden hour light, a
+warm colour grade with gentle grain. Every shot moves: an orbit that swings
+around behind her as she turns, a tracking shot through the door, a glide across the curls, a sideways sweep, a rising
+pull-back. All the people are made up; the lead is made from Susan's
+avatar.
+The lead: big copper spiral curls with darker roots and a curly
+fringe, large brown eyes, rosy cheeks, gold hoops, two thin gold necklaces,
+a tangerine top. The Sanctuary: a sunset orange wall, a cream arch around a
+teal door, monstera and palm leaves, coral bougainvillea, terracotta pots;
+inside, cream walls, a round mustard mirror, macrame hanging plants, a
+coral sofa. No words or signs appear in any picture.
+
+- **App scene:** the film goes soft (its own last picture, blurred and
+  slowly drawn closer) and the app draws a Cream Light sheet over it, 84%
+  of the film's width, Cocoa outline and flat Cocoa shadow, sized in the
+  film's own units so phone and wide screen match. On it: a Mustard
+  "Example" tag, the quiz's first question with the nine curl drawings
+  (the picked one gets the app's Cream fill and Sunset Orange outline),
+  then "Your Curly ID", the Curly ID Card and a Tangerine "Save or share
+  my card" pill. All text is Cocoa on Cream Light, Cream, Mustard or
+  Tangerine. Nothing on it can be tapped.
+- **Gate:** the film's first picture, full height. At the bottom a Cream
+  Light sheet (24 px top corners, Cocoa outline) holds "Curly Girl
+  Sanctuary" in the opening serif at 26 px, "Tap to start" (primary
+  button, 20 px) and "Start without sound" (plain button, underlined,
+  44 px tall). All text is Cocoa on Cream Light or on Tangerine. A tap
+  anywhere on the picture also starts it. Skip stays top right.
+- **Film:** 9:16. It fills a phone (cropped to fit) and is a centred
+  column on a wide screen with Peach at the sides. No words are written
+  into it; the only text over it is the app scene's.
+- **Reduce motion or data saver:** the gate, then straight to the pink and
+  the words; the film never plays.
 
 ## Sizes (Phase 1, `src/styles.css`)
 

@@ -54,16 +54,30 @@ brief's suggestion). No Shop in v1.
 
 ## Features in v1, and when each is done
 
-- **Opening.** Intro video slot (placeholder until Susan's script); it
-  fades to black (about 1.5 s), black to Soft Coral Pink (about 2 s);
-  "Hey beautiful," slides up and "Love the Curls" slides down, slowly
-  (1.5 to 2 s), in white, serif with "Curls" in script; the words fade
-  and only a centred "Start the quiz" stays. Small "Skip" on the video and
-  "Already a member? Log in" (both suggested; Jose to confirm). Reduce
-  motion: cross-fades instead of slides.
-  Done when: a first visit plays the sequence with those timings and one
-  tap on "Start the quiz" opens question 1 with no account; Skip reaches
-  the button at any moment; with reduce motion on, nothing slides.
+- **Opening.** A gate first: the film's first picture (the lead, made
+  from Susan's avatar, at the Sanctuary's door) with "Tap to start" and
+  "Start without sound", because a phone only plays sound after a tap.
+  Then the intro film (Jose, 2026-11-26: 15 s, colourful and warm, then
+  "more realistic and a bit more dynamic": cinematic and near-real with a
+  moving camera, full HD, music only, no spoken words). Six scenes: the
+  camera circles her at the door, then swings around behind her as she
+  turns; it follows her as she opens the door and steps in; it glides in across her bouncing curls; the app itself, drawn by the app over a soft stretch of the film (the curl
+  picker, one curl picked, then a Curly ID Card with "Save or share my
+  card", all labelled Example); the camera sweeps across friends with
+  every curl pattern laughing inside; it rises and pulls back from
+  everyone together with her in the middle. It fades to black
+  (about 1.5 s), black to Soft
+  Coral Pink (about 2 s); "Hey beautiful," slides up and "Love the Curls"
+  slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
+  script; the words fade and only a centred "Start the quiz" stays. Small
+  "Skip" on the gate and the film, and "Already a member? Log in" (both
+  suggested; Jose to confirm). First visit only. Reduce motion or data
+  saver: no film, and cross-fades instead of slides.
+  Done when: a first visit shows the gate, one tap plays the film and then
+  the sequence with those timings, and one tap on "Start the quiz" opens
+  question 1 with no account; Skip reaches the button at any moment; with
+  reduce motion on, no film plays and nothing slides; with no signal the
+  opening still reaches the button.
 - **Quiz.** 9 questions, one per screen, progress bar, Back, answers
   saved as the person goes. Susan's edits (2026-11-26): no "Not sure" on
   questions 1 to 4 and 7. 1 curl pattern (picture picker, 2A to 4C), 2
@@ -245,7 +259,8 @@ brief's suggestion). No Shop in v1.
 - Quiz questions and heritage list: Susan's edits of 2026-11-26 are in.
   Still to confirm: "Black American", "East Asian", "Indigenous",
   "North African" and "Pacific Islander" (added to round out her list).
-- Intro video script and footage (later).
+- Her own intro script and footage, only if she wants to replace the
+  made film (later).
 - Learn contributors, the first country or region pages, and a qualified
   reviewer for the vitamin pages.
 - Holy Grail list (products and tools) with photos.

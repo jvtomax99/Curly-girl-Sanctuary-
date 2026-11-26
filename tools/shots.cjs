@@ -9,6 +9,7 @@ const OUT = process.argv[3] || 'shots'
 const SCALE = Number(process.argv[4] || 1)
 fs.mkdirSync(OUT, { recursive: true })
 const problems = []
+const stageNow = (page) => page.evaluate(() => document.querySelector('.opening')?.dataset.stage)
 
 async function run(width, height, tag) {
   const browser = await chromium.launch()
@@ -23,9 +24,23 @@ async function run(width, height, tag) {
   }
 
   await page.goto(BASE)
-  for (const [name, ms] of [['open-1-video', 800], ['open-2-black', 3400], ['open-3-pink', 5600], ['open-4-words', 8200], ['open-5-start', 10200]]) {
-    await page.waitForTimeout(ms - (await page.evaluate(() => performance.now())))
-    await shot(name)
+  // The gate waits for a tap: nothing moves on by itself.
+  await page.waitForTimeout(1200)
+  if ((await stageNow(page)) !== 'gate') problems.push(`${tag} opening: left the gate without a tap`)
+  await shot('open-0-gate'); await noSideScroll('gate')
+  const gate = await page.locator('.op-film').first().evaluate((el) => el.complete && el.naturalWidth > 0)
+  if (!gate) problems.push(`${tag} opening: the gate picture did not load`)
+  await page.getByRole('button', { name: 'Tap to start', exact: true }).click()
+  await page.waitForTimeout(1500)
+  // This browser may not be able to play the film (no MP4 support): the opening must then
+  // carry on to the words by itself, which is the same path as a phone with no signal.
+  const played = (await stageNow(page)) === 'film' && (await page.locator('video').evaluate((v) => v.currentTime > 0))
+  console.log(`${tag}: the film ${played ? 'plays' : 'did not play here; the opening carried on without it'}`)
+  if (played) await shot('open-1-film')
+  for (const stage of ['black', 'pink', 'words', 'start']) {
+    await page.waitForFunction((s) => document.querySelector('.opening')?.dataset.stage === s, stage, { timeout: 20000 })
+    await page.waitForTimeout(stage === 'black' ? 1200 : 1600)
+    await shot(`open-${['black', 'pink', 'words', 'start'].indexOf(stage) + 2}-${stage}`)
   }
   await page.getByRole('button', { name: 'Start the quiz' }).click()
 
@@ -83,11 +98,82 @@ async function run(width, height, tag) {
   await browser.close()
 }
 
+// On a small phone every part of "Tap to start" must take a tap (the waiting words once covered it).
+// Screen readers find a heading at the gate, and keyboard focus follows the opening:
+// Skip while it plays, "Start the quiz" when it ends (never the bare page).
+async function keyboardGate() {
+  const browser = await chromium.launch()
+  const page = await (await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })).newPage()
+  await page.goto(BASE)
+  if (!(await page.getByRole('heading', { name: 'Curly Girl Sanctuary' }).count())) problems.push('gate: no heading for screen readers')
+  await page.getByRole('button', { name: 'Start without sound' }).focus()
+  await page.keyboard.press('Enter')
+  await page.waitForTimeout(300)
+  const during = await page.evaluate(() => document.activeElement?.textContent?.trim() || document.activeElement?.tagName)
+  if (during !== 'Skip') problems.push(`keyboard: after the gate, focus is on "${during}", not Skip`)
+  await page.waitForFunction(() => document.querySelector('.opening')?.dataset.stage === 'start', null, { timeout: 20000 })
+  await page.waitForTimeout(200)
+  const after = await page.evaluate(() => document.activeElement?.textContent?.trim() || document.activeElement?.tagName)
+  if (after !== 'Start the quiz') problems.push(`keyboard: at the end, focus is on "${after}", not Start the quiz`)
+  await browser.close()
+}
+
+async function smallPhoneGate() {
+  for (const at of [0.2, 0.5, 0.8]) {
+    const browser = await chromium.launch()
+    const ctx = await browser.newContext({ viewport: { width: 320, height: 568 }, hasTouch: true })
+    const page = await ctx.newPage()
+    await page.goto(BASE)
+    const box = await page.getByRole('button', { name: 'Tap to start', exact: true }).boundingBox()
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height * at)
+    await page.waitForTimeout(300)
+    if ((await stageNow(page)) === 'gate') problems.push(`320 px gate: a tap ${at * 100}% down "Tap to start" does nothing`)
+    await browser.close()
+  }
+  // Tap targets on the gate.
+  const browser = await chromium.launch()
+  const page = await (await browser.newContext({ viewport: { width: 320, height: 568 } })).newPage()
+  await page.goto(BASE)
+  for (const name of ['Tap to start', 'Start without sound', 'Skip']) {
+    const b = await page.getByRole('button', { name, exact: true }).boundingBox()
+    if (!b || b.height < 44 || b.width < 44) problems.push(`320 px gate: "${name}" is under 44 px`)
+  }
+  await browser.close()
+}
+
+// The film's app scene: the picker and the card must stay inside their sheet, and the sheet inside the film.
+async function appScene() {
+  for (const [w, h] of [[320, 568], [390, 844], [844, 390], [1440, 900]]) {
+    const browser = await chromium.launch()
+    const page = await (await browser.newContext({ viewport: { width: w, height: h } })).newPage()
+    await page.goto(BASE)
+    await page.getByRole('button', { name: 'Start without sound' }).click()
+    for (const [at, inner] of [[7.9, '.curl-grid'], [10.0, '.idcard']]) {
+      const ok = await page
+        .waitForFunction((t) => document.querySelector('video')?.currentTime >= t, at, { timeout: 30000 })
+        .then(() => true, () => false)
+      if (!ok) { console.log(`${w}x${h}: the film did not play here, so the app scene was not checked`); break }
+      const out = await page.evaluate((sel) => {
+        const box = (s) => document.querySelector(s)?.getBoundingClientRect()
+        const film = box('.op-film-video'), sheet = box('.op-app-sheet'), el = box(`.op-app ${sel}`)
+        if (!film || !sheet || !el) return 'missing'
+        const inside = (a, b) => a.left >= b.left - 1 && a.right <= b.right + 1 && a.top >= b.top - 1 && a.bottom <= b.bottom + 1
+        return inside(el, sheet) && inside(sheet, film) ? '' : 'overflows'
+      }, inner)
+      if (out) problems.push(`${w}x${h} app scene: ${inner} ${out}`)
+    }
+    await browser.close()
+  }
+}
+
 async function reducedMotion() {
   const browser = await chromium.launch()
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })
   const page = await ctx.newPage()
   await page.goto(BASE)
+  // No film with reduce motion: the tap goes straight to the pink and the words.
+  await page.getByRole('button', { name: 'Start without sound' }).click()
+  if ((await stageNow(page)) === 'film') problems.push('reduce motion: the film plays')
   await page.waitForFunction(() => document.querySelector('.opening')?.dataset.stage === 'words', null, { timeout: 15000 })
   const moved = await page.evaluate(() => [...document.querySelectorAll('.op-line')].map((el) => getComputedStyle(el).transform))
   await page.waitForTimeout(400)
@@ -151,5 +237,8 @@ async function reviewCases() {
   await run(390, 844, 'phone')
   await run(1440, 900, 'desktop')
   await reducedMotion()
+  await smallPhoneGate()
+  await appScene()
+  await keyboardGate()
   console.log(problems.length ? problems.join('\n') : 'no problems found')
 })()

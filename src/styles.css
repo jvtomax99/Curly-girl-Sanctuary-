@@ -101,18 +101,82 @@ button { cursor: pointer; }
 .opening.is-black { background: var(--black); transition-duration: 1.5s; }
 .opening.is-pink, .opening.is-words, .opening.is-start { background: var(--soft-coral); transition-duration: 2s; }
 .op-video {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-  background: linear-gradient(var(--peach) 0 64%, var(--teal) 64% 100%);
+  position: absolute; inset: 0; overflow: hidden;
+  background: var(--peach);
   transition: opacity 1.5s ease;
 }
-.opening:not(.is-video) .op-video { opacity: 0; pointer-events: none; }
-.op-title {
-  position: relative; margin: 0 0 8vh; padding: 0 24px; text-align: center; color: var(--cocoa);
-  font-family: var(--font-serif); font-weight: 600; font-size: clamp(32px, 9vw, 48px); line-height: 1.1;
+.opening:not(.is-gate):not(.is-film) .op-video { opacity: 0; pointer-events: none; }
+/* The film is 9:16: it fills a phone (cropped to fit) and is a centred column on a wide screen. */
+.op-film {
+  position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: 100%;
+  aspect-ratio: 9 / 16; transform: translateX(-50%); object-fit: cover;
 }
-.op-title .script { display: block; font-family: var(--font-script); font-weight: 400; font-size: 1.35em; }
-.op-leaf { position: absolute; width: 120px; height: 34px; border-radius: 50%; background: var(--palm-green); }
+@media (max-aspect-ratio: 9/16) { .op-film { width: 100%; } }
+.op-film-video { opacity: 0; }
+.opening.is-film .op-film-video, .opening.is-black .op-film-video { opacity: 1; }
+/* The film's app scene: the real curl picker and Curly ID Card, sitting exactly on the
+   film and sized in the film's own units (cqw), so phone and wide screen lay out the same. */
+.op-app {
+  /* One hundredth of the film's width. The film is min(100vw, 56.25vh) wide, which is
+     the fallback where container units (cqw) aren't supported, such as iOS 15. */
+  --u: min(1vw, 0.5625vh);
+  position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: 100%;
+  aspect-ratio: 9 / 16; transform: translateX(-50%);
+  container-type: inline-size; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+}
+@media (max-aspect-ratio: 9/16) { .op-app { width: 100%; } }
+@supports (width: 1cqw) { .op-app { --u: 1cqw; } }
+/* The sheet leaves with a short fade, just before the next shot. */
+.op-app { transition: opacity 0.2s ease; }
+.op-app.is-leaving { opacity: 0; }
+.op-app-sheet {
+  position: relative; width: calc(84 * var(--u)); font-size: calc(4.4 * var(--u)); color: var(--cocoa);
+  background: var(--cream-light); border: calc(0.5 * var(--u)) solid var(--cocoa); border-radius: calc(5 * var(--u));
+  box-shadow: 0 calc(1.6 * var(--u)) 0 var(--cocoa); padding: calc(5 * var(--u)) calc(4.5 * var(--u)) calc(5.5 * var(--u));
+  display: grid; animation: op-app-in 0.45s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes op-app-in { from { opacity: 0; transform: translateY(calc(8 * var(--u))) scale(0.94); } }
+.op-app-tag {
+  justify-self: start; margin: 0 0 0.9em; font-size: 0.62em; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase; background: var(--mustard);
+  border: calc(0.3 * var(--u)) solid var(--cocoa); border-radius: 999px; padding: 0.25em 0.9em;
+}
+.op-app-step { grid-area: 2 / 1; align-self: center; min-width: 0; transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.2,.8,.2,1); }
+.op-app-step.is-gone { opacity: 0; transform: scale(0.94); }
+.op-app-q { margin: 0 0 0.8em; font-weight: 800; font-size: 1.18em; line-height: 1.2; }
+.op-app-card { font-size: 1.12em; }
+.op-app-card .op-app-q { text-align: center; font-size: 1.25em; margin-bottom: 0.7em; }
+.op-app-pill {
+  margin: 1.5em auto 0; width: fit-content; font-weight: 700; font-size: 0.92em;
+  background: var(--tangerine); border: calc(0.35 * var(--u)) solid var(--cocoa); border-radius: 999px; padding: 0.6em 1.5em;
+}
+.op-app .curl-grid { gap: calc(2.2 * var(--u)); }
+.op-app .curl { border-radius: calc(3 * var(--u)); border-width: calc(0.35 * var(--u)); padding: calc(1.2 * var(--u)); gap: calc(0.6 * var(--u)); transition: background-color 0.25s ease, transform 0.3s cubic-bezier(.2,1.6,.4,1); }
+.op-app .curl-name { font-size: 0.78em; }
+.op-app .curl.is-on { background: var(--cream); border: calc(0.8 * var(--u)) solid var(--sunset-orange); transform: scale(1.07); }
+.op-app .idcard { border-width: calc(0.7 * var(--u)); border-radius: calc(4 * var(--u)); box-shadow: 0 calc(1.4 * var(--u)) 0 var(--cocoa); }
+.op-app .idcard-mark { padding: calc(3.5 * var(--u)) calc(1.5 * var(--u)); }
+.op-app .idcard-mark span { font-size: 1.7em; -webkit-text-stroke-width: calc(0.35 * var(--u)); text-shadow: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 var(--cocoa); }
+.op-app .idcard-rows { padding: calc(3 * var(--u)) calc(3.5 * var(--u)); gap: calc(1 * var(--u)); }
+.op-app .idcard-rows div { padding: calc(1.3 * var(--u)) 0; }
+.op-app .idcard-rows dt, .op-app .idcard-rows dd { font-size: 0.86em; }
+/* A tap anywhere on the picture starts the film with its music. */
+.op-tap { position: absolute; inset: 0; background: none; border: 0; padding: 0; }
+.op-gate {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: min(100%, 480px); box-sizing: border-box;
+  padding: 18px 24px max(18px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: var(--cream-light); border-top: var(--line); border-radius: 24px 24px 0 0;
+}
+.op-gate-name {
+  margin: 0; font-family: var(--font-serif); font-weight: 600; font-size: 26px; line-height: 1.15;
+  color: var(--cocoa); text-align: center;
+}
+.op-gate-go { font-size: 20px; padding: 14px 40px; min-width: 220px; }
+.op-gate-login { font-size: 15px; color: var(--cocoa); }
+.op-gate-quiet { font-size: 15px; min-height: 44px; padding: 8px 18px; text-decoration: underline; }
 .op-skip {
   position: absolute; top: max(12px, env(safe-area-inset-top)); right: 12px; z-index: 3;
   background: rgba(255, 243, 221, 0.92); border: var(--line); border-radius: var(--radius-pill);
@@ -123,6 +187,8 @@ button { cursor: pointer; }
   color: var(--white); text-align: center;
   display: flex; flex-direction: column; gap: 6vh;
   transition: opacity 0.8s ease;
+  /* The waiting lines sit over the gate, unseen: taps must pass through them. */
+  pointer-events: none;
 }
 .op-line {
   margin: 0; font-family: var(--font-serif); font-weight: 600;
@@ -145,7 +211,11 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .op-line-up, .op-line-down { transform: none; }
   .op-line { transition: opacity 1.2s ease; }
+  .op-app-sheet { animation-name: op-app-fade; }
+  .op-app-step, .op-app-step.is-gone, .op-app .curl, .op-app .curl.is-on { transform: none; }
+  .op-app-step { transition: opacity 0.35s ease; }
 }
+@keyframes op-app-fade { from { opacity: 0; } }
 
 /* ---------- Quiz ---------- */
 .screen { flex: 1; display: flex; flex-direction: column; padding: max(16px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom)); }
