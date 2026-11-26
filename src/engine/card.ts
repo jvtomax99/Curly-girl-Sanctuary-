@@ -1,6 +1,6 @@
 // What the Curly ID Card shows. Plain TypeScript, no React, so it can be tested.
 // Rule from the brief: heritage shows only if the person chose to show it.
-import { HERITAGE_FIXED, HERITAGE_REGIONS, LABELS, NOT_SURE, CURL_TYPES, type CurlType } from '../data/quiz'
+import { HERITAGE_ALL, LABELS, NOT_SURE, CURL_TYPES, type CurlType } from '../data/quiz'
 import type { QuizState } from './state'
 
 export interface CardRow {
@@ -26,8 +26,7 @@ const show = (v: string | undefined) => (v ? (LABELS[v] ?? v) : 'Not sure')
 export function heritageText(s: QuizState): string | null {
   const picked = s.answers.heritage ?? []
   if (!s.showHeritage || picked.length === 0 || picked.includes('prefer-not')) return null
-  const all = [...HERITAGE_FIXED, ...HERITAGE_REGIONS]
-  const names = picked.map((v) => all.find((o) => o.value === v)?.label).filter((x): x is string => !!x)
+  const names = picked.map((v) => HERITAGE_ALL.find((o) => o.value === v)?.label).filter((x): x is string => !!x)
   return names.length ? names.join(', ') : null
 }
 

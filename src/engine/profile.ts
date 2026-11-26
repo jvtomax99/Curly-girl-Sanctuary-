@@ -1,7 +1,7 @@
 // Profile rules in plain TypeScript, no React, so they can be tested.
 // The server (supabase/migrations/0001_phase2.sql) is what enforces who sees what;
 // these only shape what the app sends and how it shows what came back.
-import { HERITAGE_FIXED, HERITAGE_REGIONS, NOT_SURE, QUESTIONS } from '../data/quiz'
+import { HERITAGE_ALL, NOT_SURE, QUESTIONS } from '../data/quiz'
 import { cardRows, type CardRow } from './card'
 import { fresh, type QuizState } from './state'
 
@@ -54,12 +54,12 @@ export function usernameProblem(raw: string): string | null {
 // ------------------------------------------------------------------ quiz to profile
 
 const optionValues = (id: string) => new Set(QUESTIONS.find((q) => q.id === id)?.options.map((o) => o.value) ?? [])
-const HERITAGE_VALUES = new Set([...HERITAGE_FIXED, ...HERITAGE_REGIONS].map((o) => o.value))
+const HERITAGE_VALUES = new Set(HERITAGE_ALL.map((o) => o.value))
 const CARD_FIELDS = ['pattern', 'porosity', 'thickness', 'density'] as const
 
 /** The profile items a finished quiz fills. Heritage only when something was picked
- *  (never for "Prefer not to say"), and always as Only me. The traditions note stays
- *  on the phone. */
+ *  (never for "Prefer not to say"), and always as Only me. The "tell us more" note
+ *  (traditionsNote) stays on the phone. */
 export function itemsFromQuiz(s: QuizState): Item[] {
   const card: Record<string, string> = {}
   for (const f of CARD_FIELDS) {
