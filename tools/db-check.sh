@@ -17,5 +17,5 @@ trap cleanup EXIT
 "${RUN[@]}" "$BIN/pg_ctl" -D "$DIR/data" -o "-p $PORT -k $DIR -c listen_addresses=''" -l "$DIR/log" -w start >/dev/null
 PSQL=("${RUN[@]}" "$BIN/psql" -h "$DIR" -p "$PORT" -U checker -d postgres -v ON_ERROR_STOP=1 -q)
 "${PSQL[@]}" -f supabase/tests/stub-auth.sql
-"${PSQL[@]}" -f supabase/migrations/0001_phase2.sql
+for f in supabase/migrations/*.sql; do "${PSQL[@]}" -f "$f"; done
 "${PSQL[@]}" -f supabase/tests/rules.sql

@@ -125,7 +125,7 @@ coral sofa. No words or signs are painted into any picture.
 
 ## Sizes (Phase 1, `src/styles.css`)
 
-- Corners: 16 px cards (`--radius`), 14 px answer cards, pills 999 px.
+- Corners: 16 px cards (`--radius`), 14 px answer cards, fields and small boxes (`--radius-sm`), 18 px the Curly ID Card, pills 999 px.
 - Outline: 1.5 px Cocoa (`--line`); a picked answer gets 3 px Sunset
   Orange on Cream (or Mustard for chips).
 - Tap targets: 48 px buttons (`--tap`), never under 44 px.

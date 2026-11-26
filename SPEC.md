@@ -268,7 +268,7 @@ or 3 similar apps, plan mode, his OK, then build.
 |---|---|---|
 | 0 | Web app chosen; React, TypeScript, Vite on GitHub Pages (2026-11-25) | Done |
 | 1 | Opening, quiz, Curly ID Card, quiz-only results with broad tips (no server; save and share the card; "Email my results" waits for the backend; "Join the Sanctuary" opens a coming-soon page) | Done: live 2026-11-25 |
-| 2 | Supabase backend; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms (plan: `docs/phase2-plan.md`) | In progress: 2a (accounts, profile, visibility, delete) built and checked on a stand-in; waiting on Jose's Supabase setup (`docs/backend-setup.md`). 2b (Curl Kit screens) next. Sign-ups stay closed until Susan's documents and the minimum age |
+| 2 | Supabase backend; accounts, profile, visibility settings, Curl Kit, delete account, privacy policy and terms (plan: `docs/phase2-plan.md`) | In progress: 2a (accounts, profile, visibility, delete) merged; 2b (Curl Kit, moderator product page) built and checked on a stand-in server, in a pull request. Nothing has run on a real Supabase project yet (waiting on Jose's setup, `docs/backend-setup.md`). Sign-ups stay closed until Susan's documents and the minimum age |
 | 3 | Learn: Holy Grail, Around the World starter pages, mixed curls, vitamins (behind the reviewer) | Not started |
 | 4 | Community with safety: Hair Posts, Ask the Sanctuary, report, block, mute, moderation queue (Tutorials if kept in v1) | Not started |
 | 5 | Curl Lab first modules | Not started |

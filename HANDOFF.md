@@ -4,36 +4,30 @@
 visibility, Curl Kit, delete account, on Supabase. Plan approved by Jose:
 `docs/phase2-plan.md`.
 
-**Decided today (Jose):** Supabase (Free while building, Pro before real
-members); Resend free for sign-up email; avatar only in Phase 2 (photo uploads
-in Phase 4 with moderation); app-store decision at Phase 6.
+**Done:**
+- 2a merged and live (pull request #2): join, log in, password reset, profile with
+  Only me, Community or Everyone per item, public profile by link, settings, delete
+  account, the server's sign-up gate. The live app still looks like Phase 1 until Jose
+  adds the repo variables `SUPABASE_URL` and `SUPABASE_PUBLIC_KEY`.
+- 2b built on `claude/phase-2b-curl-kit` (pull request): Curl Kit (`#/kit`),
+  shared kit link (`#/u/<username>/kit`), suggestions with member counts, "Add your
+  own" (waits for a moderator), tools, how I dry, the moderator page
+  (`#/admin/products`: approve, turn down, merge). New server file
+  `supabase/migrations/0002_phase2b.sql`, tested in `supabase/tests/rules.sql`.
+  Made-up stand-in products until Susan's starter list.
 
-**Done (2a, pull request from `claude/optimistic-goodall-vp57s1`):**
-database rules (`supabase/migrations/0001_phase2.sql`) with tests on a
-throwaway Postgres (`tools/db-check.sh`); join, log in, forgot and new
-password, profile with Only me, Community or Everyone on each item, "See my
-profile as", public profile by link, settings, delete account, bottom bar,
-the sign-up gate (`#/preview`); member walk-through on a stand-in server
-(`tools/member-shots.cjs`); Jose's setup guide (`docs/backend-setup.md`).
+**Next step:** when Jose sends the `cgs-test` address and publishable key (both
+public), ask for network access to that `*.supabase.co` host (update_environment or
+create_environment), then run the member walk-through against the real project,
+email links included where possible, and report what differs from the stand-in.
 
-**Next step:** after Jose's setup, run the member walk-through against the
-real `cgs-test` project (the session needs network access to its
-`*.supabase.co` address: ask with update_environment). Then 2b: Curl Kit
-screens (`#/kit`, `#/u/<name>/kit`, product suggestions with
-`search_products`, "Add your own", tools, how I dry) and the moderator page
-(`#/admin/products`: approve, merge). The database side of 2b is already in
-the migration and tested.
+**Not verified yet:** anything against a real Supabase project; email links end to
+end; the PostgREST details the stand-in imitates (embedded products in kit rows,
+upsert with ignore-duplicates).
 
-**Not verified yet:** anything against a real Supabase project (none exists
-yet); email links (confirm sign-up, reset password) end to end. A local
-Supabase couldn't run here: Docker image registries were blocked, and
-running downloaded binaries was refused by the session's permissions.
-
-**Left open for Jose or Susan:** privacy policy, terms, community
-guidelines, minimum age (16 is a stand-in), avatar art (stand-in uses five
-skin tones, middle tone as default), starter product list, whether first
-names are ever shown, who signs off, a domain for Resend (and maybe for the
-app: it shares jvtomax99.github.io storage with other apps).
+**Left open for Jose or Susan:** privacy policy, terms, community guidelines, minimum
+age (16 is a stand-in), avatar art, starter product list, whether first names are ever
+shown, who signs off, a domain of the app's own before real members (and one for Resend).
 
 **Read first:** CLAUDE.md, `docs/phase2-plan.md`, `docs/ARCHITECTURE.md`
-("Phase 2: members"), SPEC.md (Phases).
+("Phase 2: members"), `docs/backend-setup.md`, SPEC.md (Phases).
