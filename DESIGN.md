@@ -89,14 +89,26 @@ same time. Holy Grail's carpet roll-out is optional.
 
 ## The opening's gate and film (2026-11-26)
 
-The one photographic part of the app, and only in the opening; everything
-after it stays flat and retro. The film looks like real, unposed footage
-(Susan's wish: realistic and relatable): natural light, real skin and
-flyaway hair, an ordinary bathroom, office and sofa, nothing glamorous.
-The light tells the story: cool blue dawn at the mirror, flat office
-daylight, a warm lamp in the evening, then full sun for wash day and the
-walk into work. No words or logos in any shot.
+The one painted part of the app, and only in the opening; everything after
+it stays flat and retro. The look (Jose, 2026-11-26: "colorful and warm but
+with high details"): rich hand-painted gouache, glossy sharply drawn spiral
+curls with golden highlights, golden hour light, saturated sunset colours.
+Susan's avatar: big copper spiral curls with darker roots and a curly
+fringe, large brown eyes, rosy cheeks, gold hoops, two thin gold necklaces,
+a tangerine top. The Sanctuary: a sunset orange wall, a cream arch around a
+teal door, monstera and palm leaves, coral bougainvillea, terracotta pots;
+inside, cream walls, a round mustard mirror, macrame hanging plants, a
+coral sofa. No words or signs are painted into any picture.
 
+- **App scene:** the film goes soft (its own last picture, blurred and
+  slowly drawn closer) and the app draws a Cream Light sheet over it, 84%
+  of the film's width, Cocoa outline and flat Cocoa shadow, sized in the
+  film's own units so phone and wide screen match. On it: a Mustard
+  "Example" tag, the quiz's first question with the nine curl drawings
+  (the picked one gets the app's Cream fill and Sunset Orange outline),
+  then "Your Curly ID", the Curly ID Card and a Tangerine "Save or share
+  my card" pill. All text is Cocoa on Cream Light, Cream, Mustard or
+  Tangerine. Nothing on it can be tapped.
 - **Gate:** the film's first picture, full height. At the bottom a Cream
   Light sheet (24 px top corners, Cocoa outline) holds "Curly Girl
   Sanctuary" in the opening serif at 26 px, "Tap to start" (primary

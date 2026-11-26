@@ -54,17 +54,17 @@ brief's suggestion). No Shop in v1.
 
 ## Features in v1, and when each is done
 
-- **Opening.** A gate first: the film's first picture (a woman at her
-  bathroom mirror, hands in her frizzy curls) with "Tap to start" and
+- **Opening.** A gate first: the film's first picture (Susan's painted
+  avatar at the Sanctuary's door, lifting a curl) with "Tap to start" and
   "Start without sound", because a phone only plays sound after a tap.
-  Then the intro film (Jose and Susan, 2026-11-26: 14 s, photoreal, music
-  only, no spoken words): a woman in her early 30s with an office job who
-  is still figuring out her curls. She is made to resemble Susan's painted
-  avatar (copper spiral curls, dark roots, a curly fringe). Five scenes: the morning mirror;
-  her hair hidden in a bun at work, one curl escaping; evening on the sofa,
-  hair down, her phone; wash day, the curls forming; she walks into work
-  with her curls out and colleagues with coils and waves smile. Nobody in
-  it was filmed: every person is generated. It fades to black (about 1.5 s), black to Soft
+  Then the intro film (Jose, 2026-11-26: 15 s, painted, colourful and warm
+  with fine detail, full HD, music only, no spoken words). Five scenes: she
+  smiles at the door and twirls a curl; her curls bounce, close up; the app
+  itself, drawn by the app over a soft stretch of the film (the curl
+  picker, one curl picked, then a Curly ID Card with "Save or share my
+  card", all labelled Example); friends with every curl pattern laughing
+  inside; everyone together with her in the middle. It fades to black
+  (about 1.5 s), black to Soft
   Coral Pink (about 2 s); "Hey beautiful," slides up and "Love the Curls"
   slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
   script; the words fade and only a centred "Start the quiz" stays. Small

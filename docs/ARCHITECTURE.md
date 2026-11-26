@@ -57,7 +57,11 @@ no backend and behaves as in Phase 1.
   WOFF2 fonts the stylesheet names, so one visit is enough to work
   offline; each saved page drops the old builds' files), `manifest.webmanifest`, `icon.svg` and the PNG icons made from it
   by `tools/make-icons.cjs`.
-- `public/intro/`: the intro film `intro.mp4` (14 s, photoreal, music only) and
+- `src/components/FilmApp.tsx`: the film's app scene (the real curl picker
+  and `IdCard` with made-up answers, labelled Example), shown by `Opening`
+  on the film's clock (`APP`: picker 5.15 s, picked 6.3, card 7.35, off
+  9.3). `tools/shots.cjs` checks it stays inside its sheet at three sizes.
+- `public/intro/`: the intro film `intro.mp4` (15 s, painted, 1080 by 1920, music only) and
   `gate.webp`, its first picture, shown at the gate. Cut from the rendered
   shots by `tools/make-intro-film.sh <folder>`; the source shots are not in
   the repo (`CREDITS.md`). The film is not saved for offline use (the worker leaves

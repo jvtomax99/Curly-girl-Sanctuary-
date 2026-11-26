@@ -8,12 +8,24 @@
 // that can't start, or stops moving part-way (no signal, the phone locked), is
 // passed over: the opening never waits on a frozen picture.
 import { useEffect, useRef, useState } from 'react'
+import FilmApp, { type AppBeat } from './FilmApp'
 
 type Stage = 'gate' | 'film' | 'black' | 'pink' | 'words' | 'start'
 
 // The film (public/intro/, cut by tools/make-intro-film.sh) and its first picture.
 const FILM = './intro/intro.mp4'
 const GATE = './intro/gate.webp'
+// The film's app scene, in seconds on the film's own clock: the curl picker
+// appears, one curl is picked, the Curly ID Card takes its place, and it all
+// leaves before the next shot. These must match tools/make-intro-film.sh.
+const APP: [number, AppBeat][] = [
+  [9.3, 'off'],
+  [7.35, 'card'],
+  [6.3, 'picked'],
+  [5.15, 'picker'],
+]
+const beatAt = (t: number): AppBeat => APP.find(([from]) => t >= from)?.[1] ?? 'off'
+
 // How long the film may stand still before the opening moves on without it.
 const START_WAIT_MS = 4000
 const STALL_WAIT_MS = 3000
@@ -41,6 +53,7 @@ interface Props {
 export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
   const [stage, setStage] = useState<Stage>(skipToStart ? 'start' : 'gate')
   const video = useRef<HTMLVideoElement>(null)
+  const [beat, setBeat] = useState<AppBeat>('off')
 
   useEffect(() => {
     const next = NEXT[stage]
@@ -85,7 +98,17 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
       if (!document.hidden && video.current?.paused) video.current.play().catch(afterFilm)
     }
     document.addEventListener('visibilitychange', back)
+    // The app scene follows the film's clock, frame by frame.
+    let frame = 0
+    const follow = () => {
+      const v = video.current
+      if (v) setBeat(beatAt(v.currentTime))
+      frame = requestAnimationFrame(follow)
+    }
+    frame = requestAnimationFrame(follow)
     return () => {
+      cancelAnimationFrame(frame)
+      setBeat('off')
       clearInterval(tick)
       document.removeEventListener('visibilitychange', back)
     }
@@ -133,6 +156,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
             onError={afterFilm}
           />
         )}
+        {stage === 'film' && <FilmApp beat={beat} />}
         {atGate && (
           <>
             {/* For fingers only: the buttons below do the same for keyboards and screen readers. */}
