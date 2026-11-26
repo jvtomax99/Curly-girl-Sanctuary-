@@ -19,11 +19,11 @@ const GATE = './intro/gate.webp'
 // appears, one curl is picked, the Curly ID Card takes its place, and it all
 // fades out just before the next shot. These must match tools/make-intro-film.sh.
 const APP: [number, AppBeat][] = [
-  [9.3, 'off'],
-  [9.1, 'leaving'],
-  [7.35, 'card'],
-  [6.3, 'picked'],
-  [5.15, 'picker'],
+  [10.5, 'off'],
+  [10.3, 'leaving'],
+  [8.55, 'card'],
+  [7.5, 'picked'],
+  [6.35, 'picker'],
 ]
 const beatAt = (t: number): AppBeat => APP.find(([from]) => t >= from)?.[1] ?? 'off'
 

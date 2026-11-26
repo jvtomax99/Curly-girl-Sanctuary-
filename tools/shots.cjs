@@ -145,7 +145,7 @@ async function appScene() {
     const page = await (await browser.newContext({ viewport: { width: w, height: h } })).newPage()
     await page.goto(BASE)
     await page.getByRole('button', { name: 'Start without sound' }).click()
-    for (const [at, inner] of [[5.9, '.curl-grid'], [8.2, '.idcard']]) {
+    for (const [at, inner] of [[7.1, '.curl-grid'], [9.4, '.idcard']]) {
       const ok = await page
         .waitForFunction((t) => document.querySelector('video')?.currentTime >= t, at, { timeout: 30000 })
         .then(() => true, () => false)
