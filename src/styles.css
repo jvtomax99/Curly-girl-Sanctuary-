@@ -346,3 +346,49 @@ body:has(.soon) { background: var(--palm-green); }
 .tab::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: transparent; }
 .tab[aria-current='page']::after { background: var(--sunset-orange); }
 .soon-tab p { text-align: center; }
+
+/* ---------- Members: Curl Kit ---------- */
+.kit-h { font-size: 15px; font-weight: 800; margin: 14px 0 6px; }
+.kit > .kit-h:first-child { margin-top: 0; }
+.kit-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.kit-product {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center;
+  background: var(--white); border: var(--line); border-radius: 14px; padding: 10px 12px;
+}
+.kit-name { font-weight: 800; grid-column: 1; }
+.kit-meta { font-size: 14px; grid-column: 1; }
+.kit-pending {
+  grid-column: 1; justify-self: start; font-size: 13px; font-weight: 700; margin-top: 4px;
+  background: var(--mustard); color: var(--cocoa); border-radius: var(--radius-pill); padding: 2px 10px;
+}
+.kit-remove { grid-column: 2; grid-row: 1 / span 3; }
+.kit-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.kit-tags li { background: var(--cream); border-radius: var(--radius-pill); padding: 6px 12px; font-size: 15px; font-weight: 700; }
+.kit-edit { margin-top: 12px; }
+.kit-screen .chips { margin-top: 2px; }
+.kit-own { display: flex; flex-direction: column; margin-top: 10px; padding: 12px; border: var(--line); border-radius: var(--radius); background: var(--white); }
+.kit-own select {
+  font-size: 16px; min-height: var(--tap); padding: 10px 12px; border-radius: 14px;
+  border: 1.5px solid var(--olive); background: var(--white); color: var(--cocoa); font-weight: 400; width: 100%;
+}
+.kit-own-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.psearch { margin-top: 16px; }
+.psearch-label { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.psearch-input {
+  font-size: 16px; min-height: var(--tap); padding: 10px 12px; border-radius: 14px;
+  border: 1.5px solid var(--olive); background: var(--white); width: 100%;
+}
+.psearch-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.psearch-item {
+  width: 100%; min-height: 56px; display: grid; grid-template-columns: 1fr auto; gap: 0 8px; align-items: center;
+  text-align: left; background: var(--cream-light); border: var(--line); border-radius: 14px; padding: 8px 12px;
+}
+.psearch-item:disabled { cursor: default; background: var(--cream); }
+.psearch-count { grid-column: 2; grid-row: 1 / span 2; font-size: 14px; font-weight: 700; white-space: nowrap; }
+
+/* ---------- Members: moderator page ---------- */
+.admin-item { grid-template-columns: 1fr; }
+.admin-actions, .admin-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.admin-actions .btn, .admin-confirm .btn { padding: 8px 18px; font-size: 15px; min-height: 44px; }
+.admin-confirm p { margin: 0; width: 100%; font-size: 15px; }
+.admin-pick { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 15px; }

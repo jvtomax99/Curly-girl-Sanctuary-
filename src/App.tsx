@@ -2,7 +2,8 @@
 // #/ opening, #/quiz/N question N+1, #/card, #/tips, #/soon.
 // Members (Phase 2): #/join, #/login, #/reset, #/profile, #/settings, #/u/<username>,
 // #/community, #/learn, #/lab, #/guidelines, #/privacy, #/terms; #/preview turns on
-// sign-ups on this phone for testing.
+// sign-ups on this phone for testing. Curl Kit (Phase 2b): #/kit, #/u/<username>/kit,
+// and the moderators' #/admin/products.
 import { useCallback, useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { isPreview, sb, setPreview, signupsOpen } from './backend'
@@ -23,9 +24,12 @@ import Settings from './components/Settings'
 import BottomBar from './components/BottomBar'
 import TabSoon from './components/TabSoon'
 import Legal from './components/Legal'
+import CurlKit from './components/CurlKit'
+import MemberKit from './components/MemberKit'
+import AdminProducts from './components/AdminProducts'
 import NotFound from './components/NotFound'
 
-const SIMPLE = ['card', 'tips', 'soon', 'join', 'login', 'reset', 'profile', 'settings', 'preview', 'community', 'learn', 'lab'] as const
+const SIMPLE = ['card', 'tips', 'soon', 'join', 'login', 'reset', 'profile', 'settings', 'preview', 'community', 'learn', 'lab', 'kit'] as const
 const LEGAL = ['guidelines', 'privacy', 'terms'] as const
 type Simple = (typeof SIMPLE)[number]
 
@@ -35,10 +39,12 @@ type Route =
   | { name: Simple }
   | { name: 'legal'; doc: string }
   | { name: 'member'; username: string }
+  | { name: 'memberKit'; username: string }
+  | { name: 'admin' }
   | { name: 'missing' }
 
 /** Screens that need a logged-in member. */
-const MEMBERS_ONLY = new Set<string>(['profile', 'settings', 'reset', 'community', 'learn', 'lab'])
+const MEMBERS_ONLY = new Set<string>(['profile', 'settings', 'reset', 'community', 'learn', 'lab', 'kit', 'admin'])
 /** Screens about the quiz, which need it finished first. */
 const AFTER_QUIZ = new Set<string>(['card', 'tips', 'soon'])
 
@@ -49,6 +55,9 @@ function readRoute(): Route {
   if (h === 'quiz') return { name: 'quiz', step: 0 }
   const u = /^u\/([a-z0-9_.]{3,20})$/i.exec(h)
   if (u) return { name: 'member', username: u[1].toLowerCase() }
+  const k = /^u\/([a-z0-9_.]{3,20})\/kit$/i.exec(h)
+  if (k) return { name: 'memberKit', username: k[1].toLowerCase() }
+  if (h === 'admin/products') return { name: 'admin' }
   if ((LEGAL as readonly string[]).includes(h)) return { name: 'legal', doc: h }
   if ((SIMPLE as readonly string[]).includes(h)) return { name: h as Simple }
   // An app address that doesn't exist (a typo, an old link): say so. Anything else after the #
@@ -62,6 +71,7 @@ const SCREEN_NAMES: Record<string, string> = {
   card: 'Your Curly ID Card', tips: 'Your results', soon: 'Join the Sanctuary', join: 'Join the Sanctuary',
   login: 'Log in', reset: 'New password', profile: 'My profile', settings: 'Settings', preview: SITE,
   community: 'Community', learn: 'Learn', lab: 'Curl Lab', missing: 'Page not found',
+  kit: 'My Curl Kit', admin: 'Products',
   guidelines: 'Community guidelines', privacy: 'Privacy policy', terms: 'Terms of use',
 }
 /** The browser tab's name for each screen. */
@@ -69,12 +79,20 @@ function titleOf(r: Route): string {
   if (r.name === 'opening') return `${SITE} · Take the curl quiz`
   if (r.name === 'quiz') return `Question ${r.step + 1} of ${QUESTIONS.length} · ${SITE}`
   if (r.name === 'member') return `@${r.username} · ${SITE}`
+  if (r.name === 'memberKit') return `@${r.username}’s Curl Kit · ${SITE}`
   const name = SCREEN_NAMES[r.name === 'legal' ? r.doc : r.name] ?? SITE
   return name === SITE ? SITE : `${name} · ${SITE}`
 }
 
 const hashOf = (r: Route) =>
-  r.name === 'quiz' ? `#/quiz/${r.step}` : r.name === 'opening' ? '' : r.name === 'legal' ? `#/${r.doc}` : r.name === 'member' ? `#/u/${r.username}` : r.name === 'missing' ? '' : `#/${r.name}`
+  r.name === 'quiz' ? `#/quiz/${r.step}`
+  : r.name === 'opening' ? ''
+  : r.name === 'legal' ? `#/${r.doc}`
+  : r.name === 'member' ? `#/u/${r.username}`
+  : r.name === 'memberKit' ? `#/u/${r.username}/kit`
+  : r.name === 'admin' ? '#/admin/products'
+  : r.name === 'missing' ? ''
+  : `#/${r.name}`
 
 /** The furthest question the person may open: the first one still unanswered. */
 function furthest(s: QuizState): number {
@@ -266,7 +284,7 @@ export default function App() {
     history.replaceState(null, '', clearQuiz || !state.done ? '#/' : '#/card')
     setRoute(readRoute())
   }
-  const withBar = session && ['profile', 'settings', 'community', 'learn', 'lab'].includes(route.name)
+  const withBar = session && ['profile', 'settings', 'community', 'learn', 'lab', 'kit', 'admin'].includes(route.name)
 
   if (route.name === 'opening') {
     return <Opening onStart={start} skipToStart={state.seenOpening} onLogIn={canJoin && !session ? () => go('#/login') : undefined} />
@@ -309,11 +327,14 @@ export default function App() {
       {route.name === 'reset' && <NewPassword onDone={toProfile} />}
       {route.name === 'profile' && session && <Profile key={session.user.id} quiz={state} go={go} onSignedOut={signedOut} />}
       {route.name === 'settings' && session && <Settings onSignedOut={signedOut} onLoggedOut={loggedOut} onDeleted={deleted} />}
+      {route.name === 'kit' && session && <CurlKit key={session.user.id} onBack={() => goBack('#/profile')} onSignedOut={signedOut} />}
+      {route.name === 'admin' && session && <AdminProducts key={session.user.id} onSignedOut={signedOut} onBack={() => goBack('#/profile')} />}
+      {route.name === 'memberKit' && <MemberKit username={route.username} loggedIn={!!session} myId={session?.user.id ?? null} canJoin={canJoin} go={go} />}
       {route.name === 'member' && <PublicProfile username={route.username} loggedIn={!!session} canJoin={canJoin} quizDone={state.done} go={go} />}
       {route.name === 'missing' && <NotFound quizDone={state.done} go={go} />}
       {(route.name === 'community' || route.name === 'learn' || route.name === 'lab') && <TabSoon tab={route.name} />}
       {route.name === 'legal' && <Legal doc={route.doc} onBack={() => goBack(session ? '#/settings' : canJoin ? '#/join' : '#/card')} />}
-      {withBar && <BottomBar current={hashOf(route)} go={go} />}
+      {withBar && <BottomBar current={route.name === 'kit' || route.name === 'admin' ? '#/profile' : hashOf(route)} go={go} />}
     </div>
   )
 }

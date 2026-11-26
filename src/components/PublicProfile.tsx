@@ -48,7 +48,8 @@ export default function PublicProfile({ username, loggedIn, canJoin, quizDone, g
   const card = profileRows(p.items.filter((i) => i.item === 'card'))
   const scalp = profileRows(p.items.filter((i) => i.item === 'scalp'))[0]
   const heritage = profileRows(p.items.filter((i) => i.item === 'heritage'))[0]
-  const nothing = !card.length && !scalp && !heritage
+  const kit = p.items.some((i) => i.item === 'kit')
+  const nothing = !card.length && !scalp && !heritage && !kit
 
   return (
     <main className="screen profile">
@@ -61,6 +62,12 @@ export default function PublicProfile({ username, loggedIn, canJoin, quizDone, g
       )}
       {scalp && <section className="p-item"><h2 className="p-title">Scalp type</h2><p className="p-value">{scalp.value}</p></section>}
       {heritage && <section className="p-item"><h2 className="p-title">Heritage</h2><p className="p-value">{heritage.value}</p></section>}
+      {kit && (
+        <section className="p-item">
+          <h2 className="p-title">Curl Kit</h2>
+          <button className="btn btn-secondary btn-wide" onClick={() => go(`#/u/${p.username}/kit`)}>See @{p.username}’s Curl Kit</button>
+        </section>
+      )}
       {nothing && <p className="note">@{p.username} keeps their profile to {loggedIn ? 'themselves' : 'members'} for now.</p>}
       {!loggedIn && canJoin && (
         <div className="card-actions">
