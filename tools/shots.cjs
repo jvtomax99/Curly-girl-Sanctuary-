@@ -9,6 +9,7 @@ const OUT = process.argv[3] || 'shots'
 const SCALE = Number(process.argv[4] || 1)
 fs.mkdirSync(OUT, { recursive: true })
 const problems = []
+const stageNow = (page) => page.evaluate(() => document.querySelector('.opening')?.dataset.stage)
 
 async function run(width, height, tag) {
   const browser = await chromium.launch()
@@ -23,9 +24,23 @@ async function run(width, height, tag) {
   }
 
   await page.goto(BASE)
-  for (const [name, ms] of [['open-1-video', 800], ['open-2-black', 3400], ['open-3-pink', 5600], ['open-4-words', 8200], ['open-5-start', 10200]]) {
-    await page.waitForTimeout(ms - (await page.evaluate(() => performance.now())))
-    await shot(name)
+  // The gate waits for a tap: nothing moves on by itself.
+  await page.waitForTimeout(1200)
+  if ((await stageNow(page)) !== 'gate') problems.push(`${tag} opening: left the gate without a tap`)
+  await shot('open-0-gate'); await noSideScroll('gate')
+  const gate = await page.locator('.op-film').first().evaluate((el) => el.complete && el.naturalWidth > 0)
+  if (!gate) problems.push(`${tag} opening: the gate picture did not load`)
+  await page.getByRole('button', { name: 'Tap to start', exact: true }).click()
+  await page.waitForTimeout(1500)
+  // This browser may not be able to play the film (no MP4 support): the opening must then
+  // carry on to the words by itself, which is the same path as a phone with no signal.
+  const played = (await stageNow(page)) === 'film' && (await page.locator('video').evaluate((v) => v.currentTime > 0))
+  console.log(`${tag}: the film ${played ? 'plays' : 'did not play here; the opening carried on without it'}`)
+  if (played) await shot('open-1-film')
+  for (const stage of ['black', 'pink', 'words', 'start']) {
+    await page.waitForFunction((s) => document.querySelector('.opening')?.dataset.stage === s, stage, { timeout: 20000 })
+    await page.waitForTimeout(stage === 'black' ? 1200 : 1600)
+    await shot(`open-${['black', 'pink', 'words', 'start'].indexOf(stage) + 2}-${stage}`)
   }
   await page.getByRole('button', { name: 'Start the quiz' }).click()
 
@@ -85,6 +100,9 @@ async function reducedMotion() {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })
   const page = await ctx.newPage()
   await page.goto(BASE)
+  // No film with reduce motion: the tap goes straight to the pink and the words.
+  await page.getByRole('button', { name: 'Start without sound' }).click()
+  if ((await stageNow(page)) === 'film') problems.push('reduce motion: the film plays')
   await page.waitForFunction(() => document.querySelector('.opening')?.dataset.stage === 'words', null, { timeout: 15000 })
   const moved = await page.evaluate(() => [...document.querySelectorAll('.op-line')].map((el) => getComputedStyle(el).transform))
   await page.waitForTimeout(400)

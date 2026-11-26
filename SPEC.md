@@ -54,16 +54,23 @@ brief's suggestion). No Shop in v1.
 
 ## Features in v1, and when each is done
 
-- **Opening.** Intro video slot (placeholder until Susan's script); it
-  fades to black (about 1.5 s), black to Soft Coral Pink (about 2 s);
-  "Hey beautiful," slides up and "Love the Curls" slides down, slowly
+- **Opening.** A gate first: the film's first picture (Susan's painted
+  avatar at the Sanctuary's door) with "Tap to start" and "Start without
+  sound", because a phone only plays sound after a tap. Then the intro film
+  (Jose, 2026-11-26: 12 s, five painted shots, music only, no spoken words;
+  a stand-in for Susan's own script and footage, which replace it when they
+  exist); it fades to black (about 1.5 s), black to Soft Coral Pink (about
+  2 s); "Hey beautiful," slides up and "Love the Curls" slides down, slowly
   (1.5 to 2 s), in white, serif with "Curls" in script; the words fade
-  and only a centred "Start the quiz" stays. Small "Skip" on the video and
-  "Already a member? Log in" (both suggested; Jose to confirm). Reduce
-  motion: cross-fades instead of slides.
-  Done when: a first visit plays the sequence with those timings and one
-  tap on "Start the quiz" opens question 1 with no account; Skip reaches
-  the button at any moment; with reduce motion on, nothing slides.
+  and only a centred "Start the quiz" stays. Small "Skip" on the gate and
+  the film, and "Already a member? Log in" (both suggested; Jose to
+  confirm). First visit only. Reduce motion or data saver: no film, and
+  cross-fades instead of slides.
+  Done when: a first visit shows the gate, one tap plays the film and then
+  the sequence with those timings, and one tap on "Start the quiz" opens
+  question 1 with no account; Skip reaches the button at any moment; with
+  reduce motion on, no film plays and nothing slides; with no signal the
+  opening still reaches the button.
 - **Quiz.** 10 questions, one per screen, progress bar, Back, answers
   saved as the person goes. Proposed questions (Susan to approve): 1 curl
   pattern (picture picker, 2A to 4C), 2 porosity (everyday clues with

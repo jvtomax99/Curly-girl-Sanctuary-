@@ -43,7 +43,7 @@ re-measure any new pair before using it.
 | Cream Light on Palm Green | 5.5:1 | All text (dark banners) |
 | Cocoa on White | 11.8:1 | All text (answer cards; measured 2026-11-25) |
 | Cocoa on Cream | 8.1:1 | All text (picked answers, the ID card; measured 2026-11-25) |
-| Cocoa on Peach | 4.6:1 | All text (the video placeholder; measured 2026-11-25) |
+| Cocoa on Peach | 4.6:1 | All text (measured 2026-11-25) |
 | White on Soft Coral | 3.3:1 | Large or bold only (intro sequence) |
 | Cocoa on Sunset Orange | 3.5:1 | Large or bold only (headers on orange) |
 | Sunset Orange on Cream Light | 3.1:1 | Large or bold only (decoration, not text) |
@@ -86,6 +86,28 @@ Playful and short, always with a reduce-motion version (cross-fades
 instead of slides). Opening timings: fade to black about 1.5 s, black to
 Soft Coral Pink about 2 s, the two lines slide in over 1.5 to 2 s at the
 same time. Holy Grail's carpet roll-out is optional.
+
+## The opening's gate and film (2026-11-26)
+
+The one painted part of the app (Jose's pick: soft gouache picture-book
+painting, look "B3"), and only in the opening; everything after it stays
+flat and retro. Susan's avatar: big copper spiral curls with darker roots
+and a curly fringe, gold hoops, two thin gold necklaces, a tangerine top
+and cream trousers. The Sanctuary: a sunset orange wall, a cream arch
+around a teal door, palm and monstera leaves, terracotta pots; inside,
+cream walls, round mustard mirrors, a coral sofa, a teal tiled floor.
+No words or signs are painted into any picture.
+
+- **Gate:** the film's first picture, full height. At the bottom a Cream
+  Light sheet (24 px top corners, Cocoa outline) holds "Curly Girl
+  Sanctuary" in the opening serif at 26 px, "Tap to start" (primary
+  button, 20 px) and "Start without sound" (plain button, underlined,
+  44 px tall). All text is Cocoa on Cream Light or on Tangerine. A tap
+  anywhere on the picture also starts it. Skip stays top right.
+- **Film:** 9:16. It fills a phone (cropped to fit) and is a centred
+  column on a wide screen with Peach at the sides. No text over it.
+- **Reduce motion or data saver:** the gate, then straight to the pink and
+  the words; the film never plays.
 
 ## Sizes (Phase 1, `src/styles.css`)
 

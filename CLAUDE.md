@@ -88,8 +88,13 @@ email. **Now:** Phase 2 (`docs/phase2-plan.md`); see `HANDOFF.md`.
   Lab, Hair Posts (Best Day, Hot Mess), Tutorials, Ask the Sanctuary,
   Around the World, Holy Grail, "Join the Sanctuary", "No thanks, just the
   quiz". Two names are still open (`SPEC.md`): use the working names.
-- **Intro video** is a placeholder slot until Susan's script and footage
-  exist. Never make or buy one without asking.
+- **Intro film** (`public/intro/intro.mp4`, 12.2 s, music only, and its
+  first picture `gate.webp`; cut by `tools/make-intro-film.sh`): Jose's
+  stand-in, made 2026-11-26 with his Runway credits, until Susan's script
+  and footage exist. Susan's avatar in it was painted from her photos: the
+  photos never go in the repo. No spoken or written words in the film: her
+  words are hers. Runway credits are Jose's: say what a batch will cost
+  before making it.
 - **Public repo.** Paid raw files (fonts, art, video) can't be committed
   (`docs/assets.md`, section 9). The suggested fonts are Google Fonts
   (Open Font License) and can be bundled. Asset budget: TO FILL (ask Jose

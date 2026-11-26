@@ -99,19 +99,35 @@ button { cursor: pointer; }
 .opening.is-black { background: var(--black); transition-duration: 1.5s; }
 .opening.is-pink, .opening.is-words, .opening.is-start { background: var(--soft-coral); transition-duration: 2s; }
 .op-video {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-  background: linear-gradient(var(--peach) 0 64%, var(--teal) 64% 100%);
+  position: absolute; inset: 0; overflow: hidden;
+  background: var(--peach);
   transition: opacity 1.5s ease;
 }
-.opening:not(.is-video) .op-video { opacity: 0; pointer-events: none; }
-.op-play {
-  width: 88px; height: 88px; border-radius: 50%;
-  background: var(--cream-light); border: 3px solid var(--cocoa);
-  display: grid; place-items: center;
+.opening:not(.is-gate):not(.is-film) .op-video { opacity: 0; pointer-events: none; }
+/* The film is 9:16: it fills a phone (cropped to fit) and is a centred column on a wide screen. */
+.op-film {
+  position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: 100%;
+  aspect-ratio: 9 / 16; transform: translateX(-50%); object-fit: cover;
 }
-.op-video-note { color: var(--cocoa); font-weight: 600; text-align: center; padding: 0 24px; }
-.op-leaf { position: absolute; width: 120px; height: 34px; border-radius: 50%; background: var(--palm-green); }
+@media (max-aspect-ratio: 9/16) { .op-film { width: 100%; } }
+.op-film-video { opacity: 0; }
+.opening.is-film .op-film-video, .opening.is-black .op-film-video { opacity: 1; }
+/* A tap anywhere on the picture starts the film with its music. */
+.op-tap { position: absolute; inset: 0; background: none; border: 0; padding: 0; }
+.op-gate {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: min(100%, 480px); box-sizing: border-box;
+  padding: 18px 24px max(18px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: var(--cream-light); border-top: var(--line); border-radius: 24px 24px 0 0;
+}
+.op-gate-name {
+  margin: 0; font-family: var(--font-serif); font-weight: 600; font-size: 26px; line-height: 1.15;
+  color: var(--cocoa); text-align: center;
+}
+.op-gate-go { font-size: 20px; padding: 14px 40px; min-width: 220px; }
+.op-gate-login { font-size: 15px; color: var(--cocoa); }
+.op-gate-quiet { font-size: 15px; min-height: 44px; padding: 8px 18px; text-decoration: underline; }
 .op-skip {
   position: absolute; top: max(12px, env(safe-area-inset-top)); right: 12px; z-index: 3;
   background: rgba(255, 243, 221, 0.92); border: var(--line); border-radius: var(--radius-pill);
