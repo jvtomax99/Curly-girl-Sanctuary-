@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { cardRows, group, heritageText, canShowHeritage } from './card'
 import { choose, fresh, parse, answered, type QuizState } from './state'
+import { QUESTIONS } from '../data/quiz'
 
 function filled(extra: Partial<QuizState> = {}): QuizState {
   let s = fresh()
@@ -42,11 +43,16 @@ describe('Curly ID Card', () => {
     s = { ...s, showHeritage: true }
     s = choose(s, 'heritage', 'african')
     expect(s.showHeritage).toBe(false)
-    s = choose(s, 'heritage', 'caribbean')
+    s = choose(s, 'heritage', 'black-caribbean')
     expect(heritageText(s)).toBeNull()
   })
 
-  it('shows "Not sure" for unanswered or not-sure rows', () => {
+  it('still shows an old save\'s retired heritage choice', () => {
+    const s = parse(JSON.stringify({ v: 1, answers: { heritage: ['caribbean', 'european'] }, step: 4, showHeritage: true }))
+    expect(heritageText(s)).toBe('Caribbean, European')
+  })
+
+  it('shows "Not sure" for unanswered rows and for old saves that picked it', () => {
     const s = choose(fresh(), 'pattern', 'not-sure')
     expect(cardRows(s).map((r) => r.value)).toEqual(['Not sure', 'Not sure', 'Not sure', 'Not sure', 'Not sure'])
     expect(group(s)).toBeNull()
@@ -70,10 +76,28 @@ describe('Saved quiz', () => {
     expect(s.answers.heritage).toEqual(['european'])
   })
 
-  it('treats heritage and traditions as optional, the rest as required', () => {
+  it('treats heritage and struggles as optional, the rest as required', () => {
     expect(answered(fresh(), 'heritage')).toBe(true)
-    expect(answered(fresh(), 'traditions')).toBe(true)
+    expect(answered(fresh(), 'struggle')).toBe(true)
     expect(answered(fresh(), 'wash')).toBe(false)
+  })
+
+  it('has 9 questions, and "Not sure" only in old saves', () => {
+    expect(QUESTIONS).toHaveLength(9)
+    for (const q of QUESTIONS) expect(q.options.map((o) => o.value)).not.toContain('not-sure')
+    expect(QUESTIONS.find((q) => q.id === 'heritage')!.options.map((o) => o.value)).not.toContain('not-sure-yet')
+  })
+
+  it('lets struggles have several answers', () => {
+    let s = choose(fresh(), 'struggle', 'frizz')
+    s = choose(s, 'struggle', 'hair-loss')
+    expect(s.answers.struggle).toEqual(['frizz', 'hair-loss'])
+  })
+
+  it('drops the old traditions question from an old save and keeps the rest', () => {
+    const s = parse(JSON.stringify({ v: 1, answers: { goal: ['length'], traditions: ['all'] }, step: 9 }))
+    expect(s.answers).toEqual({ goal: ['length'] })
+    expect(s.step).toBe(8)
   })
 
   it('survives broken or old saves', () => {
@@ -81,7 +105,7 @@ describe('Saved quiz', () => {
     expect(parse(JSON.stringify({ v: 2 }))).toEqual(fresh())
     const s = parse(JSON.stringify({ v: 1, answers: { pattern: ['3B'], hacker: ['x'], wash: 'daily' }, step: 99, showHeritage: 'yes' }))
     expect(s.answers).toEqual({ pattern: ['3B'] })
-    expect(s.step).toBe(9)
+    expect(s.step).toBe(8)
     expect(s.showHeritage).toBe(false)
   })
 

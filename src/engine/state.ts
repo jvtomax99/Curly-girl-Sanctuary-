@@ -8,11 +8,12 @@ export const KEY = 'cgs.quiz.v1'
 export interface QuizState {
   v: 1
   answers: Partial<Record<QuestionId, string[]>>
-  /** Index of the question the person is on (0 to 9). */
+  /** Index of the question the person is on (0 to 8). */
   step: number
   /** "Show heritage on my card": off unless the person turns it on. */
   showHeritage: boolean
-  /** Optional "traditions you grew up with" box. Never on the card. */
+  /** Optional "tell us more" box on the heritage question. Stays on this phone, never
+   *  on the card or profile. (Named for the earlier "traditions" box; old saves keep it.) */
   traditionsNote: string
   done: boolean
   /** The opening has played once on this phone. */

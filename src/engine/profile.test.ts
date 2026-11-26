@@ -19,7 +19,7 @@ function quiz(extra: Partial<QuizState> = {}): QuizState {
   s = choose(s, 'thickness', 'coarse')
   s = choose(s, 'density', 'high')
   s = choose(s, 'scalp', 'dry')
-  s = choose(s, 'heritage', 'caribbean')
+  s = choose(s, 'heritage', 'black-caribbean')
   s = choose(s, 'heritage', 'mixed')
   return { ...s, done: true, traditionsNote: 'Grandma’s oil', ...extra }
 }
@@ -67,6 +67,10 @@ describe('what a viewer is shown', () => {
     { item: 'scalp', value: { scalp: 'dry' }, visibility: 'everyone' },
     { item: 'heritage', value: { values: ['mixed', 'caribbean'] }, visibility: 'only_me' },
   ]
+  it('still shows a retired heritage choice saved before the list changed', () => {
+    expect(profileRows([{ item: 'heritage', value: { values: ['latin-caribbean', 'east-southeast-asian'] }, visibility: 'only_me' }]))
+      .toEqual([{ label: 'Heritage', value: 'Latin Caribbean, East or Southeast Asian' }])
+  })
   it('shows every row the server sent', () => {
     expect(profileRows(all)).toEqual([
       { label: 'Hair type', value: '4A' },

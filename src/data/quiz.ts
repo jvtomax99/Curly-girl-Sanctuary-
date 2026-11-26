@@ -1,6 +1,8 @@
-// The 10 quiz questions. Every word a person reads in the quiz lives here, so
-// Susan's changes are text edits. Questions 8 to 10 and the heritage list are
-// stand-ins until she approves them (SPEC.md, "Needed from Susan").
+// The 9 quiz questions. Every word a person reads in the quiz lives here, so
+// Susan's changes are text edits. Susan's edits of 2026-11-26: no "Not sure" on
+// questions 1 to 4 and 7 (question 2 tells you how to check instead), her heritage
+// list with a box to say more, wash without "less than once a week", struggles as
+// select-all, "Growth" for length, and the traditions question removed.
 
 export type Kind = 'curl' | 'single' | 'multi'
 
@@ -34,53 +36,68 @@ export type QuestionId =
   | 'scalp'
   | 'struggle'
   | 'goal'
-  | 'traditions'
 
+/** No longer offered, but old saves (and old cards) may still hold it. */
 export const NOT_SURE = 'not-sure'
 
 export const CURL_TYPES = ['2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C'] as const
 export type CurlType = (typeof CURL_TYPES)[number]
 
-// Stand-in heritage list, broad regions only, until Susan sends hers.
-export const HERITAGE_FIXED: Option[] = [
-  { value: 'mixed', label: 'Mixed' },
-  { value: 'not-sure-yet', label: 'Not sure yet' },
-  { value: 'prefer-not', label: 'Prefer not to say' },
-]
+// Heritage: Susan's list (2026-11-26), alphabetical, then Mixed and Prefer not to say.
 export const HERITAGE_REGIONS: Option[] = [
   { value: 'african', label: 'African' },
-  { value: 'caribbean', label: 'Caribbean' },
-  { value: 'latin-american', label: 'Latin American' },
-  { value: 'middle-eastern-north-african', label: 'Middle Eastern or North African' },
-  { value: 'south-asian', label: 'South Asian' },
-  { value: 'east-southeast-asian', label: 'East or Southeast Asian' },
+  { value: 'black-american', label: 'Black American' },
+  { value: 'black-caribbean', label: 'Black Caribbean' },
+  { value: 'east-asian', label: 'East Asian' },
   { value: 'european', label: 'European' },
   { value: 'indigenous', label: 'Indigenous' },
+  { value: 'latin-american', label: 'Latin American' },
+  { value: 'latin-caribbean', label: 'Latin Caribbean' },
+  { value: 'middle-eastern', label: 'Middle Eastern' },
+  { value: 'north-african', label: 'North African' },
   { value: 'pacific-islander', label: 'Pacific Islander' },
+  { value: 'south-asian', label: 'South Asian' },
+  { value: 'southeast-asian', label: 'Southeast Asian' },
 ]
+export const HERITAGE_FIXED: Option[] = [
+  { value: 'mixed', label: 'Mixed' },
+  { value: 'prefer-not', label: 'Prefer not to say' },
+]
+/** Earlier choices no longer offered. Kept so old saves and profiles still show them,
+ *  and the quiz shows one as a chip only while it is picked, so it can be taken off. */
+export const HERITAGE_RETIRED: Option[] = [
+  { value: 'not-sure-yet', label: 'Not sure yet' },
+  { value: 'caribbean', label: 'Caribbean' },
+  { value: 'middle-eastern-north-african', label: 'Middle Eastern or North African' },
+  { value: 'east-southeast-asian', label: 'East or Southeast Asian' },
+]
+export const HERITAGE_ALL: Option[] = [...HERITAGE_REGIONS, ...HERITAGE_FIXED, ...HERITAGE_RETIRED]
+
+/** Shown under question 8 when "Hair loss" is picked (CLAUDE.md: hair loss points to a
+ *  doctor, never to a product). */
+export const HAIR_LOSS_NOTE = {
+  text: 'Hair loss is a reason to see a board-certified dermatologist, not to switch products.',
+  src: ['S5'],
+}
 
 export const QUESTIONS: Question[] = [
   {
     id: 'pattern',
     kind: 'curl',
     title: 'Which curl is closest to yours?',
-    help: 'Pick the one that looks most like your hair when it dries on its own.',
-    options: [
-      ...CURL_TYPES.map((t) => ({ value: t, label: t })),
-      { value: NOT_SURE, label: 'Not sure' },
-    ],
+    help: 'Pick the one that looks most like your hair when it dries on its own. Between two? Pick the one most of your hair looks like.',
+    options: CURL_TYPES.map((t) => ({ value: t, label: t })),
   },
   {
     id: 'porosity',
     kind: 'single',
     title: 'How does your hair take in water?',
-    help: 'Porosity is how well your hair takes in and holds water. These are everyday clues, not a test, so “Not sure” is fine.',
+    help: 'Porosity is how well your hair takes in and holds water. To check, mist a section of clean hair with water. Beads of water that sit on top and a long dry time point to low. Water that soaks in fast and dries fast points to high. Home checks only give a rough idea, so go with what you usually notice.',
     sources: ['S1', 'S2'],
     options: [
       { value: 'low', label: 'Low', note: 'Takes a long time to get wet and to dry; products sit on top.' },
       { value: 'medium', label: 'Medium', note: 'Somewhere in between.' },
       { value: 'high', label: 'High', note: 'Soaks up water and dries quickly; often feels dry or frizzy.' },
-      { value: NOT_SURE, label: 'Not sure' },
     ],
   },
   {
@@ -92,7 +109,6 @@ export const QUESTIONS: Question[] = [
       { value: 'fine', label: 'Fine', note: 'Very thin.' },
       { value: 'medium', label: 'Medium', note: 'In between.' },
       { value: 'coarse', label: 'Coarse', note: 'Thick.' },
-      { value: NOT_SURE, label: 'Not sure' },
     ],
   },
   {
@@ -104,7 +120,6 @@ export const QUESTIONS: Question[] = [
       { value: 'low', label: 'Easy to see', note: 'Your card says Low density.' },
       { value: 'medium', label: 'A little', note: 'Your card says Medium density.' },
       { value: 'high', label: 'Hardly any', note: 'Your card says High density.' },
-      { value: NOT_SURE, label: 'Not sure' },
     ],
   },
   {
@@ -113,7 +128,7 @@ export const QUESTIONS: Question[] = [
     title: 'Where does your hair story come from?',
     help: 'Select all that apply. This helps match what you learn. It is optional, and only you see it unless you choose to show it.',
     optional: true,
-    options: [...HERITAGE_FIXED, ...HERITAGE_REGIONS],
+    options: [...HERITAGE_REGIONS, ...HERITAGE_FIXED],
   },
   {
     id: 'wash',
@@ -123,7 +138,6 @@ export const QUESTIONS: Question[] = [
       { value: 'daily', label: 'Every day' },
       { value: '2-3-week', label: '2 to 3 times a week' },
       { value: 'weekly', label: 'Once a week' },
-      { value: 'less', label: 'Less than once a week' },
     ],
   },
   {
@@ -135,20 +149,22 @@ export const QUESTIONS: Question[] = [
       { value: 'oily', label: 'Oily' },
       { value: 'balanced', label: 'Balanced' },
       { value: 'dry', label: 'Dry' },
-      { value: NOT_SURE, label: 'Not sure' },
     ],
   },
   {
     id: 'struggle',
-    kind: 'single',
-    title: 'What is your biggest hair struggle?',
+    kind: 'multi',
+    title: 'What are your hair struggles?',
+    help: 'Select all that apply.',
+    optional: true,
     options: [
       { value: 'frizz', label: 'Frizz' },
       { value: 'dryness', label: 'Dryness' },
-      { value: 'definition', label: 'Curls that won’t hold' },
-      { value: 'tangles', label: 'Tangles' },
+      { value: 'tangles', label: 'Tangles a lot' },
       { value: 'breakage', label: 'Breakage' },
-      { value: 'volume', label: 'Flat or no volume' },
+      { value: 'hair-loss', label: 'Hair loss' },
+      { value: 'volume', label: 'Flat' },
+      { value: 'definition', label: 'No definition' },
     ],
   },
   {
@@ -158,19 +174,11 @@ export const QUESTIONS: Question[] = [
     options: [
       { value: 'moisture', label: 'Moisture' },
       { value: 'definition', label: 'Definition' },
-      { value: 'length', label: 'Length' },
+      { value: 'length', label: 'Growth' },
       { value: 'volume', label: 'Volume' },
       { value: 'routine', label: 'An easier routine' },
       { value: 'love', label: 'Just loving my curls' },
     ],
-  },
-  {
-    id: 'traditions',
-    kind: 'multi',
-    title: 'Which traditions are you curious to learn from?',
-    help: 'Select any. Optional.',
-    optional: true,
-    options: [...HERITAGE_REGIONS, { value: 'all', label: 'Surprise me' }],
   },
 ]
 
