@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 type Stage = 'video' | 'black' | 'pink' | 'words' | 'start'
 
 // When each stage starts, in ms from the beginning. The video slot is a
-// placeholder until Susan's video exists, so it only shows briefly.
+// placeholder (a title card) until Susan's video exists, so it only shows briefly.
 const TIMES: [Stage, number][] = [
   ['black', 2200],
   ['pink', 3700],
@@ -38,10 +38,10 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
         <span className="op-leaf" style={{ left: -30, top: '22%', transform: 'rotate(35deg)' }} />
         <span className="op-leaf" style={{ right: -30, top: '30%', transform: 'rotate(-35deg)' }} />
         <span className="op-leaf" style={{ left: -40, top: '52%', transform: 'rotate(15deg)' }} />
-        <div className="op-play" aria-hidden="true">
-          <svg width="34" height="38" viewBox="0 0 34 38"><path d="M4 3 L31 19 L4 35 Z" fill="var(--sunset-orange)" /></svg>
-        </div>
-        <p className="op-video-note">Intro video coming soon</p>
+        {/* Until Susan's video exists, the slot is a title card: no fake play button. */}
+        <p className="op-title" aria-hidden="true">
+          Curly Girl <span className="script">Sanctuary</span>
+        </p>
       </div>
 
       <div className="op-words" aria-hidden={stage !== 'words'}>

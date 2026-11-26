@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- The link preview picture (public/social.jpg, 1200 x 630). Rebuild: node tools/make-social.cjs
+     White on Soft Coral only large or bold (DESIGN.md).
+     The card's answers are a made-up example. -->
+<html><head><meta charset="utf-8"><style>
+@font-face { font-family: "Playfair Display"; src: url("../node_modules/@fontsource/playfair-display/files/playfair-display-latin-600-normal.woff2"); font-weight: 600; }
+@font-face { font-family: "Yellowtail"; src: url("../node_modules/@fontsource/yellowtail/files/yellowtail-latin-400-normal.woff2"); }
+@font-face { font-family: "Montserrat"; src: url("../node_modules/@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2"); font-weight: 100 900; }
+* { margin: 0; box-sizing: border-box; }
+body { width: 1200px; height: 630px; overflow: hidden; font-family: "Montserrat", sans-serif; background: #EE5D62; color: #fff; position: relative; }
+.band { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; background: #2AA08B; }
+.left { position: absolute; left: 80px; top: 70px; width: 560px; }
+.name { font-weight: 800; font-size: 22px; letter-spacing: .14em; text-transform: uppercase; color: #fff; }
+h1 { font-family: "Playfair Display"; font-weight: 600; font-size: 74px; line-height: 1.1; margin-top: 34px; }
+h1 .script { font-family: "Yellowtail"; font-weight: 400; font-size: 1.5em; line-height: .9; }
+p { font-size: 25px; line-height: 1.4; margin-top: 26px; color: #fff; font-weight: 700; max-width: 520px; }
+.card { position: absolute; right: 80px; top: 120px; width: 440px; display: grid; grid-template-columns: 38% 1fr; border: 4px solid #5A2A1E; border-radius: 24px; overflow: hidden; background: #F7D192; box-shadow: 0 9px 0 #5A2A1E; transform: rotate(3deg); color: #5A2A1E; }
+.mark { background: linear-gradient(135deg, #E44B52 0 50%, #F18B25 50% 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 8px; }
+.mark span { font-weight: 900; font-size: 40px; line-height: 1.15; color: #E3A441; -webkit-text-stroke: 2px #5A2A1E; paint-order: stroke fill; text-shadow: 3px 3px 0 #5A2A1E; }
+dl { padding: 18px 20px; display: grid; gap: 6px; }
+dl div { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(90,42,30,.18); padding: 5px 0; font-size: 19px; }
+dl div:last-child { border: 0; }
+dd { font-weight: 800; }
+</style></head><body>
+<div class="band"></div>
+<div class="left">
+  <div class="name">Curly Girl Sanctuary</div>
+  <h1>Hey beautiful,<br>Love the <span class="script">Curls</span></h1>
+  <p>Ten questions, then your own Curly ID Card to save and share.</p>
+</div>
+<div class="card">
+  <div class="mark"><span>Curly</span><span>ID</span><span>Card</span></div>
+  <dl><div><dt>Hair type</dt><dd>3B</dd></div><div><dt>Porosity</dt><dd>High</dd></div><div><dt>Thickness</dt><dd>Fine</dd></div><div><dt>Density</dt><dd>Medium</dd></div><div><dt>Scalp</dt><dd>Dry</dd></div></dl>
+</div>
+</body></html>

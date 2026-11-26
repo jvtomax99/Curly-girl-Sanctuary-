@@ -74,7 +74,7 @@ export const QUESTIONS: Question[] = [
     id: 'porosity',
     kind: 'single',
     title: 'How does your hair take in water?',
-    help: 'Porosity is how well your hair takes in and holds water. These are everyday clues, not a test, so "Not sure" is fine.',
+    help: 'Porosity is how well your hair takes in and holds water. These are everyday clues, not a test, so “Not sure” is fine.',
     sources: ['S1', 'S2'],
     options: [
       { value: 'low', label: 'Low', note: 'Takes a long time to get wet and to dry; products sit on top.' },
