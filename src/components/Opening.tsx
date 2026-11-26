@@ -4,8 +4,9 @@
 //
 // The film has music, and a phone only plays sound after a tap, so the opening
 // waits on a gate first: the film's own first picture with "Tap to start".
-// No film (straight to the words) with reduce motion or data saver on, or when
-// the film can't start within FILM_WAIT_MS (no signal, a blocked video).
+// No film (straight to the words) with reduce motion or data saver on. A film
+// that can't start, or stops moving part-way (no signal, the phone locked), is
+// passed over: the opening never waits on a frozen picture.
 import { useEffect, useRef, useState } from 'react'
 
 type Stage = 'gate' | 'film' | 'black' | 'pink' | 'words' | 'start'
@@ -13,7 +14,9 @@ type Stage = 'gate' | 'film' | 'black' | 'pink' | 'words' | 'start'
 // The film (public/intro/, cut by tools/make-intro-film.sh) and its first picture.
 const FILM = './intro/intro.mp4'
 const GATE = './intro/gate.webp'
-const FILM_WAIT_MS = 2500
+// How long the film may stand still before the opening moves on without it.
+const START_WAIT_MS = 4000
+const STALL_WAIT_MS = 3000
 
 // After the film each stage leads to the next, in ms: black for 1.5 s, the
 // change to pink 2 s, the words 3.5 s.
@@ -46,34 +49,68 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
     return () => clearTimeout(timer)
   }, [stage])
 
-  // A film that never starts (or stalls before its first frame) must not leave
-  // the person on a frozen picture.
-  const playing = useRef(false)
+  // Decided once: these people never see the film, so it is never downloaded.
+  const [filmOff] = useState(() => skipToStart || noFilm())
+
+  const stopFilm = () => video.current?.pause()
+  const afterFilm = () => {
+    stopFilm()
+    setStage((s) => (s === 'film' ? 'black' : s))
+  }
+
+  // While the film is on, check that it keeps moving. If its clock stands still
+  // (never started, lost signal, paused by the phone), stop it and carry on, so
+  // its music can't start late over the words.
   useEffect(() => {
     if (stage !== 'film') return
-    const timer = window.setTimeout(() => {
-      if (!playing.current) setStage('black')
-    }, FILM_WAIT_MS)
-    return () => clearTimeout(timer)
+    let last = -1
+    let since = performance.now()
+    const tick = window.setInterval(() => {
+      const v = video.current
+      if (!v) return afterFilm()
+      const now = performance.now()
+      if (document.hidden) {
+        since = now
+        return
+      }
+      if (v.currentTime !== last) {
+        last = v.currentTime
+        since = now
+        return
+      }
+      if (now - since > (last <= 0 ? START_WAIT_MS : STALL_WAIT_MS)) afterFilm()
+    }, 250)
+    // Back from another app: the phone paused the film; carry on with it.
+    const back = () => {
+      if (!document.hidden && video.current?.paused) video.current.play().catch(afterFilm)
+    }
+    document.addEventListener('visibilitychange', back)
+    return () => {
+      clearInterval(tick)
+      document.removeEventListener('visibilitychange', back)
+    }
   }, [stage])
-
-  const afterFilm = () => setStage((s) => (s === 'film' ? 'black' : s))
 
   const begin = (withSound: boolean) => {
     const v = video.current
-    if (!v || noFilm()) {
+    if (!v) {
       setStage('pink')
       return
     }
     // play() has to be called inside the tap itself, or the phone refuses the sound.
     v.muted = !withSound
-    playing.current = false
     setStage('film')
     v.play().catch(afterFilm)
   }
 
   const skip = () => {
-    video.current?.pause()
+    const v = video.current
+    if (v) {
+      // Stop the film and its download.
+      v.pause()
+      v.removeAttribute('src')
+      v.load()
+    }
     setStage('start')
   }
 
@@ -83,8 +120,8 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
     <div className={`opening is-${stage}`} data-stage={stage}>
       <div className="op-video" aria-hidden={!atGate}>
         {/* The gate's picture is the film's first frame, so the tap brings it to life. */}
-        <img className="op-film" src={GATE} alt="" />
-        {!skipToStart && (
+        {!skipToStart && stage !== 'start' && <img className="op-film" src={GATE} alt="" />}
+        {!filmOff && (
           <video
             ref={video}
             className="op-film op-film-video"
@@ -92,14 +129,14 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
             poster={GATE}
             preload="auto"
             playsInline
-            onPlaying={() => (playing.current = true)}
             onEnded={afterFilm}
             onError={afterFilm}
           />
         )}
         {atGate && (
           <>
-            <button className="op-tap" onClick={() => begin(true)} aria-label="Tap to start, with music" />
+            {/* For fingers only: the buttons below do the same for keyboards and screen readers. */}
+            <button className="op-tap" onClick={() => begin(true)} tabIndex={-1} aria-hidden="true" />
             <div className="op-gate">
               <p className="op-gate-name">Curly Girl Sanctuary</p>
               <button className="btn btn-primary op-gate-go" onClick={() => begin(true)}>
@@ -125,7 +162,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
         </p>
       </div>
 
-      <div className="op-start">
+      <div className="op-start" aria-hidden={stage !== 'start'}>
         <h1 className="sr-only">Curly Girl Sanctuary</h1>
         <button className="btn btn-primary" onClick={onStart} tabIndex={stage === 'start' ? 0 : -1}>
           Start the quiz

@@ -89,14 +89,13 @@ same time. Holy Grail's carpet roll-out is optional.
 
 ## The opening's gate and film (2026-11-26)
 
-The one painted part of the app (Jose's pick: soft gouache picture-book
-painting, look "B3"), and only in the opening; everything after it stays
-flat and retro. Susan's avatar: big copper spiral curls with darker roots
-and a curly fringe, gold hoops, two thin gold necklaces, a tangerine top
-and cream trousers. The Sanctuary: a sunset orange wall, a cream arch
-around a teal door, palm and monstera leaves, terracotta pots; inside,
-cream walls, round mustard mirrors, a coral sofa, a teal tiled floor.
-No words or signs are painted into any picture.
+The one photographic part of the app, and only in the opening; everything
+after it stays flat and retro. The film looks like real, unposed footage
+(Susan's wish: realistic and relatable): natural light, real skin and
+flyaway hair, an ordinary bathroom, office and sofa, nothing glamorous.
+The light tells the story: cool blue dawn at the mirror, flat office
+daylight, a warm lamp in the evening, then full sun for wash day and the
+walk into work. No words or logos in any shot.
 
 - **Gate:** the film's first picture, full height. At the bottom a Cream
   Light sheet (24 px top corners, Cocoa outline) holds "Curly Girl

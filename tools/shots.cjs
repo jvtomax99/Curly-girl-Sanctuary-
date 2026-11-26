@@ -95,6 +95,30 @@ async function run(width, height, tag) {
   await browser.close()
 }
 
+// On a small phone every part of "Tap to start" must take a tap (the waiting words once covered it).
+async function smallPhoneGate() {
+  for (const at of [0.2, 0.5, 0.8]) {
+    const browser = await chromium.launch()
+    const ctx = await browser.newContext({ viewport: { width: 320, height: 568 }, hasTouch: true })
+    const page = await ctx.newPage()
+    await page.goto(BASE)
+    const box = await page.getByRole('button', { name: 'Tap to start', exact: true }).boundingBox()
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height * at)
+    await page.waitForTimeout(300)
+    if ((await stageNow(page)) === 'gate') problems.push(`320 px gate: a tap ${at * 100}% down "Tap to start" does nothing`)
+    await browser.close()
+  }
+  // Tap targets on the gate.
+  const browser = await chromium.launch()
+  const page = await (await browser.newContext({ viewport: { width: 320, height: 568 } })).newPage()
+  await page.goto(BASE)
+  for (const name of ['Tap to start', 'Start without sound', 'Skip']) {
+    const b = await page.getByRole('button', { name, exact: true }).boundingBox()
+    if (!b || b.height < 44 || b.width < 44) problems.push(`320 px gate: "${name}" is under 44 px`)
+  }
+  await browser.close()
+}
+
 async function reducedMotion() {
   const browser = await chromium.launch()
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })
@@ -166,5 +190,6 @@ async function reviewCases() {
   await run(390, 844, 'phone')
   await run(1440, 900, 'desktop')
   await reducedMotion()
+  await smallPhoneGate()
   console.log(problems.length ? problems.join('\n') : 'no problems found')
 })()

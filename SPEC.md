@@ -54,18 +54,22 @@ brief's suggestion). No Shop in v1.
 
 ## Features in v1, and when each is done
 
-- **Opening.** A gate first: the film's first picture (Susan's painted
-  avatar at the Sanctuary's door) with "Tap to start" and "Start without
-  sound", because a phone only plays sound after a tap. Then the intro film
-  (Jose, 2026-11-26: 12 s, five painted shots, music only, no spoken words;
-  a stand-in for Susan's own script and footage, which replace it when they
-  exist); it fades to black (about 1.5 s), black to Soft Coral Pink (about
-  2 s); "Hey beautiful," slides up and "Love the Curls" slides down, slowly
-  (1.5 to 2 s), in white, serif with "Curls" in script; the words fade
-  and only a centred "Start the quiz" stays. Small "Skip" on the gate and
-  the film, and "Already a member? Log in" (both suggested; Jose to
-  confirm). First visit only. Reduce motion or data saver: no film, and
-  cross-fades instead of slides.
+- **Opening.** A gate first: the film's first picture (a woman at her
+  bathroom mirror, hands in her frizzy curls) with "Tap to start" and
+  "Start without sound", because a phone only plays sound after a tap.
+  Then the intro film (Jose and Susan, 2026-11-26: 14 s, photoreal, music
+  only, no spoken words): an invented woman in her early 30s with an office
+  job who is still figuring out her curls. Five scenes: the morning mirror;
+  her hair hidden in a bun at work, one curl escaping; evening on the sofa,
+  hair down, her phone; wash day, the curls forming; she walks into work
+  with her curls out and colleagues with coils and waves smile. Nobody in
+  it is a real person. It fades to black (about 1.5 s), black to Soft
+  Coral Pink (about 2 s); "Hey beautiful," slides up and "Love the Curls"
+  slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
+  script; the words fade and only a centred "Start the quiz" stays. Small
+  "Skip" on the gate and the film, and "Already a member? Log in" (both
+  suggested; Jose to confirm). First visit only. Reduce motion or data
+  saver: no film, and cross-fades instead of slides.
   Done when: a first visit shows the gate, one tap plays the film and then
   the sequence with those timings, and one tap on "Start the quiz" opens
   question 1 with no account; Skip reaches the button at any moment; with

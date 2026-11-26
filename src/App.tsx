@@ -224,6 +224,8 @@ export default function App() {
    *  Back doesn't walk back through members-only screens. */
   const loggedOut = () => {
     setSession(null)
+    // Someone who has been inside doesn't get the gate and the film on the way out.
+    if (!state.seenOpening) update({ ...state, seenOpening: true })
     history.replaceState(null, '', state.done ? '#/card' : '#/')
     setRoute(readRoute())
   }
@@ -236,7 +238,7 @@ export default function App() {
         /* storage blocked */
       }
       setState(fresh(true))
-    }
+    } else if (!state.seenOpening) update({ ...state, seenOpening: true })
     history.replaceState(null, '', clearQuiz || !state.done ? '#/' : '#/card')
     setRoute(readRoute())
   }

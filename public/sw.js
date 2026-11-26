@@ -27,6 +27,8 @@ self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim(
 self.addEventListener('fetch', (event) => {
   const { request } = event
   if (request.method !== 'GET' || !request.url.startsWith(SCOPE)) return
+  // A film is asked for in pieces (Range), which can't be saved: leave it to the browser.
+  if (request.headers.has('range')) return
 
   // The built files (assets/) get a new name with every version, so a saved copy is never
   // out of date: it answers at once, and only a file not saved yet goes to the internet.

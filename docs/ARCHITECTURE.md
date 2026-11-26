@@ -45,8 +45,8 @@ no backend and behaves as in Phase 1.
   `group` for the tips. Tests: `src/engine/card.test.ts`.
 - `src/components/`: `Opening` (stages gate, film, black, pink, words, start:
   the gate waits for a tap, the film's end starts the timers; Skip; no film
-  and CSS cross-fades under reduce motion or data saver; a film that can't
-  start within 2.5 s is passed over), `Quiz` (one question
+  (it isn't even downloaded) and CSS cross-fades under reduce motion or data
+  saver; a film that can't start or stops moving is stopped and passed over), `Quiz` (one question
   per screen, curl grid drawn by `CurlArt`, chips for multi-select, the
   heritage box and switch), `IdCard`, `CardScreen`, `Tips`, `Soon`.
 - `src/cardImage.ts`: draws the card as a 1080 x 1350 PNG on a canvas and
@@ -57,11 +57,11 @@ no backend and behaves as in Phase 1.
   WOFF2 fonts the stylesheet names, so one visit is enough to work
   offline; each saved page drops the old builds' files), `manifest.webmanifest`, `icon.svg` and the PNG icons made from it
   by `tools/make-icons.cjs`.
-- `public/intro/`: the intro film `intro.mp4` (12.2 s, music only) and
+- `public/intro/`: the intro film `intro.mp4` (14 s, photoreal, music only) and
   `gate.webp`, its first picture, shown at the gate. Cut from the rendered
   shots by `tools/make-intro-film.sh <folder>`; the source shots are not in
-  the repo (`CREDITS.md`). The film is not saved for offline use: without
-  signal the opening passes over it.
+  the repo (`CREDITS.md`). The film is not saved for offline use (the worker leaves
+  Range requests alone): without signal the opening passes over it.
 - `tools/shots.cjs`: the walk-through with screenshots and checks, plus
   the cases a review found (offline after one visit, the heritage switch,
   Back after the in-app Back).

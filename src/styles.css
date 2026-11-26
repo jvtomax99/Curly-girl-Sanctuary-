@@ -138,6 +138,8 @@ button { cursor: pointer; }
   color: var(--white); text-align: center;
   display: flex; flex-direction: column; gap: 6vh;
   transition: opacity 0.8s ease;
+  /* The waiting lines sit over the gate, unseen: taps must pass through them. */
+  pointer-events: none;
 }
 .op-line {
   margin: 0; font-family: var(--font-serif); font-weight: 600;
