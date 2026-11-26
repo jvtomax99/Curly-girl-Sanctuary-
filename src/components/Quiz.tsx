@@ -1,7 +1,7 @@
-// The 10-question quiz: one question per screen, progress bar, Back, answers
+// The 9-question quiz: one question per screen, progress bar, Back, answers
 // saved as the person goes (App saves every change).
 import { useEffect, useRef } from 'react'
-import { QUESTIONS, CURL_TYPES, NOT_SURE, type CurlType, type Question } from '../data/quiz'
+import { QUESTIONS, CURL_TYPES, HAIR_LOSS_NOTE, HERITAGE_RETIRED, type CurlType, type Question } from '../data/quiz'
 import { SOURCES } from '../data/sources'
 import { answered, choose, type QuizState } from '../engine/state'
 import { canShowHeritage } from '../engine/card'
@@ -29,6 +29,9 @@ export default function Quiz({ step, state, onChange, onBack, onNext }: Props) {
   const pick = (value: string) => onChange(choose(state, q.id, value))
   const isOn = (value: string) => picked.includes(value)
   const last = step === QUESTIONS.length - 1
+  // An old save may hold a heritage choice the list no longer offers: show it while it
+  // is picked, so the person can see it and take it off.
+  const options = q.id === 'heritage' ? [...q.options, ...HERITAGE_RETIRED.filter((o) => picked.includes(o.value))] : q.options
 
   return (
     <main className="screen">
@@ -63,7 +66,7 @@ export default function Quiz({ step, state, onChange, onBack, onNext }: Props) {
       )}
       {q.kind === 'multi' && (
         <div className="chips" role="group" aria-label={q.title}>
-          {q.options.map((o) => (
+          {options.map((o) => (
             <button key={o.value} className="chip" aria-pressed={isOn(o.value)} onClick={() => pick(o.value)}>
               {o.label}
             </button>
@@ -71,10 +74,18 @@ export default function Quiz({ step, state, onChange, onBack, onNext }: Props) {
         </div>
       )}
 
+      {q.id === 'struggle' && picked.includes('hair-loss') && (
+        <div className="doctor">
+          <p>{HAIR_LOSS_NOTE.text}</p>
+          <Sources ids={HAIR_LOSS_NOTE.src} />
+        </div>
+      )}
+
       {q.id === 'heritage' && (
         <>
           <label className="field">
-            Optional: traditions you grew up with
+            Want to say more? Where your family is from, or traditions you grew up with (optional)
+            <span className="field-note">Only on this phone. Never on your card or profile.</span>
             <textarea
               maxLength={300}
               value={state.traditionsNote}
@@ -113,9 +124,6 @@ function CurlGrid({ q, isOn, pick }: { q: Question; isOn: (v: string) => boolean
           <span className="curl-name">{t}</span>
         </button>
       ))}
-      <button className="curl curl-unsure" aria-pressed={isOn(NOT_SURE)} onClick={() => pick(NOT_SURE)}>
-        <span className="curl-name">Not sure</span>
-      </button>
     </div>
   )
 }

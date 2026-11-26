@@ -30,13 +30,14 @@ no backend and behaves as in Phase 1.
   moves add a history step that remembers where it came from (`go`); the
   app's own Back buttons step back through history when that leads to the
   right screen (`goBack`), so the phone's Back gesture keeps going back.
-- `src/data/quiz.ts`: the 10 questions and every quiz word, the stand-in
-  heritage list, curl types 2A to 4C.
+- `src/data/quiz.ts`: the 9 questions and every quiz word, Susan's
+  heritage list (plus retired choices old saves may hold), the hair-loss
+  doctor line, curl types 2A to 4C.
 - `src/data/tips.ts`: tips by group (wavy 2, curly 3, coily 4, and
   all-hair for "Not sure"), each with a source id; the see-a-doctor line.
 - `src/data/sources.ts`: the app's copy of `docs/sources.md`.
 - `src/engine/state.ts`: the saved quiz (`cgs.quiz.v1`: answers, step,
-  heritage switch, traditions note, done, opening seen), `choose` (single
+  heritage switch, "say more" note (`traditionsNote`), done, opening seen), `choose` (single
   keeps one, multi toggles, "Prefer not to say" clears the rest and turns
   the heritage switch off), `answered`, and a `parse` that survives broken
   or old saves.

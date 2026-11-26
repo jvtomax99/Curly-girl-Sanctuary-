@@ -30,7 +30,7 @@ join the community, learn, and explore the Curl Lab.
 2. Safe space first. Reporting, blocking and moderation are part of v1.
 3. Privacy by choice. Heritage and anything personal are optional and
    controlled by the person.
-4. Quick to start. The first quiz is 10 questions; the longer one lives in
+4. Quick to start. The first quiz is 9 questions; the longer one lives in
    the Curl Lab and is optional.
 5. Honest information. Health and vitamin content is educational, reviewed
    and sourced.
@@ -78,17 +78,23 @@ brief's suggestion). No Shop in v1.
   question 1 with no account; Skip reaches the button at any moment; with
   reduce motion on, no film plays and nothing slides; with no signal the
   opening still reaches the button.
-- **Quiz.** 10 questions, one per screen, progress bar, Back, answers
-  saved as the person goes. Proposed questions (Susan to approve): 1 curl
-  pattern (picture picker, 2A to 4C), 2 porosity (everyday clues with
-  "Not sure", not a test: Jose, 2026-11-25, since no study backs the home
-  float test; `docs/sources.md` S1, S2), 3 strand thickness (fine, medium, coarse), 4 density
-  (how much scalp you can see), 5 heritage (multi-select with "Mixed",
-  "Not sure yet", "Prefer not to say" plus Susan's list; an optional text
-  box for traditions; "Show heritage on my profile" switch, off), 6 how
-  often you wash, 7 scalp (oily, balanced, dry, not sure), 8 biggest
-  struggle, 9 main goal, 10 traditions you are curious to learn from.
-  Done when: all 10 answer on a 390 px phone, Back keeps answers, closing
+- **Quiz.** 9 questions, one per screen, progress bar, Back, answers
+  saved as the person goes. Susan's edits (2026-11-26): no "Not sure" on
+  questions 1 to 4 and 7. 1 curl pattern (picture picker, 2A to 4C), 2
+  porosity (low, medium, high, with how to check: mist clean hair and watch
+  for beads and dry time; never the float test, which no study backs;
+  `docs/sources.md` S1, S2), 3 strand thickness (fine, medium, coarse), 4
+  density (how much scalp you can see), 5 heritage (optional, multi-select:
+  African, Black American, Black Caribbean, East Asian, European,
+  Indigenous, Latin American, Latin Caribbean, Middle Eastern, North
+  African, Pacific Islander, South Asian, Southeast Asian, Mixed, Prefer not
+  to say; an optional "say more" box that stays on the phone; "Show heritage
+  on my card" switch, off), 6 how often you wash (every day, 2 to 3 times a
+  week, once a week), 7 scalp (oily, balanced, dry), 8 struggles (optional,
+  select all: frizz, dryness, tangles a lot, breakage, hair loss, flat, no
+  definition; hair loss shows the see-a-dermatologist line), 9 main goal
+  (growth replaces length).
+  Done when: all 9 answer on a 390 px phone, Back keeps answers, closing
   the app mid-quiz and reopening resumes at the same question, and heritage
   can be skipped.
 - **Curly ID Card (results).** Hair type (2A to 4C), porosity (Low,
@@ -171,7 +177,9 @@ brief's suggestion). No Shop in v1.
   badges to the profile; progress ("Your Curly ID is 60% complete") shows
   on the profile; a gentle nudge to refresh after a few months. The
   profile shows only the simple scalp type; deeper scalp answers stay
-  private, and itching or hair loss point to a doctor.
+  private, and itching or hair loss point to a doctor. Starting point:
+  Susan's "Curly Hair Survey" (a Google Form, kept out of the repo like the
+  brief).
   Done when: finishing a module shows the lab report and adds its tags to
   the profile, a retake replaces the answers, and deeper scalp answers are
   unreadable by anyone else (checked on the server).
@@ -248,7 +256,9 @@ brief's suggestion). No Shop in v1.
 - Final fonts (or approval of the matches), logo and app icon files.
 - Original files of the store illustration and Curly ID Card (add 4A to
   4C, porosity Low, Medium, High, a Scalp row).
-- Final 10 quiz questions and the heritage list.
+- Quiz questions and heritage list: Susan's edits of 2026-11-26 are in.
+  Still to confirm: "Black American", "East Asian", "Indigenous",
+  "North African" and "Pacific Islander" (added to round out her list).
 - Her own intro script and footage, only if she wants to replace the
   made film (later).
 - Learn contributors, the first country or region pages, and a qualified
