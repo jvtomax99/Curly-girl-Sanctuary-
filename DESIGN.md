@@ -95,8 +95,8 @@ warm but with high details", then "more realistic visually", then "more
 realistic and a bit more dynamic"): a cinematic, near-real film still. Real
 skin and real hair strands, glossy spiral curls with golden rim light, a
 full-frame cinema camera's shallow depth of field, golden hour light, a
-warm colour grade with gentle grain. Every shot moves: an orbit, a tracking
-shot through the door, a glide across the curls, a sideways sweep, a rising
+warm colour grade with gentle grain. Every shot moves: an orbit that swings
+around behind her as she turns, a tracking shot through the door, a glide across the curls, a sideways sweep, a rising
 pull-back. All the people are made up; the lead is made from Susan's
 avatar.
 The lead: big copper spiral curls with darker roots and a curly

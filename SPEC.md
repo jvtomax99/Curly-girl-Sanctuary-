@@ -60,8 +60,8 @@ brief's suggestion). No Shop in v1.
   Then the intro film (Jose, 2026-11-26: 15 s, colourful and warm, then
   "more realistic and a bit more dynamic": cinematic and near-real with a
   moving camera, full HD, music only, no spoken words). Six scenes: the
-  camera circles her at the door; it follows her as she opens the door and
-  steps in; it glides in across her bouncing curls; the app itself, drawn by the app over a soft stretch of the film (the curl
+  camera circles her at the door, then swings around behind her as she
+  turns; it follows her as she opens the door and steps in; it glides in across her bouncing curls; the app itself, drawn by the app over a soft stretch of the film (the curl
   picker, one curl picked, then a Curly ID Card with "Save or share my
   card", all labelled Example); the camera sweeps across friends with
   every curl pattern laughing inside; it rises and pulls back from

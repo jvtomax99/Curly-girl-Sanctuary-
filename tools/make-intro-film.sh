@@ -7,7 +7,7 @@
 #   v4.mp4 it glides in across her curls   v5.mp4 it sweeps across the friends inside
 #   v6.mp4 it rises and pulls back from everyone together   music.mp3
 # The cut: 15 s, 1080 by 1920, 30 frames a second, music only.
-#   0.0 v1  1.8 v2  3.8 v3  5.6 v4  7.0 the app scene  11.0 v5  13.0 v6  15.0 end
+#   0.0 v1  1.6 v2  4.0 v3  5.6 v4  7.0 the app scene  11.0 v5  13.0 v6  15.0 end
 # The app scene's picture is only the last picture of the shot before it, held, blurred and
 # slowly drawn closer: the app itself draws the curl picker and the Curly ID Card over it as
 # real text (src/components/FilmApp.tsx). If a time here changes, change APP in
@@ -22,9 +22,9 @@ FIT="fps=30,scale=$W:$H:force_original_aspect_ratio=increase,crop=$W:$H,setsar=1
 
 # name, start in the source, length taken from the source, length in the film (seconds)
 SHOTS=(
-  "v1 ${V1:-0.2 2.1 1.8}"
-  "v2 ${V2:-0.0 5.0 2.0}"
-  "v3 ${V3:-1.6 2.4 1.8}"
+  "v1 ${V1:-0.2 2.1 1.6}"
+  "v2 ${V2:-0.9 4.1 2.4}"
+  "v3 ${V3:-1.6 2.2 1.6}"
   "v4 ${V4:-0.5 1.7 1.4}"
   "PLATE 0 0 4.0"
   "v5 ${V5:-0.4 2.4 2.0}"
