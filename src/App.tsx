@@ -195,6 +195,12 @@ export default function App() {
     return () => data.subscription.unsubscribe()
   }, [])
 
+  // A member who is signed in has been inside: the next launch skips the gate and the
+  // film (whether she logged in from the gate, a link or another screen).
+  useEffect(() => {
+    if (session && !state.seenOpening) update({ ...state, seenOpening: true })
+  }, [session, state, update])
+
   // Keep the address in step with the screen chosen at launch.
   useEffect(() => {
     const want = hashOf(route)

@@ -96,6 +96,25 @@ async function run(width, height, tag) {
 }
 
 // On a small phone every part of "Tap to start" must take a tap (the waiting words once covered it).
+// Screen readers find a heading at the gate, and keyboard focus follows the opening:
+// Skip while it plays, "Start the quiz" when it ends (never the bare page).
+async function keyboardGate() {
+  const browser = await chromium.launch()
+  const page = await (await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })).newPage()
+  await page.goto(BASE)
+  if (!(await page.getByRole('heading', { name: 'Curly Girl Sanctuary' }).count())) problems.push('gate: no heading for screen readers')
+  await page.getByRole('button', { name: 'Start without sound' }).focus()
+  await page.keyboard.press('Enter')
+  await page.waitForTimeout(300)
+  const during = await page.evaluate(() => document.activeElement?.textContent?.trim() || document.activeElement?.tagName)
+  if (during !== 'Skip') problems.push(`keyboard: after the gate, focus is on "${during}", not Skip`)
+  await page.waitForFunction(() => document.querySelector('.opening')?.dataset.stage === 'start', null, { timeout: 20000 })
+  await page.waitForTimeout(200)
+  const after = await page.evaluate(() => document.activeElement?.textContent?.trim() || document.activeElement?.tagName)
+  if (after !== 'Start the quiz') problems.push(`keyboard: at the end, focus is on "${after}", not Start the quiz`)
+  await browser.close()
+}
+
 async function smallPhoneGate() {
   for (const at of [0.2, 0.5, 0.8]) {
     const browser = await chromium.launch()
@@ -121,7 +140,7 @@ async function smallPhoneGate() {
 
 // The film's app scene: the picker and the card must stay inside their sheet, and the sheet inside the film.
 async function appScene() {
-  for (const [w, h] of [[320, 568], [390, 844], [1440, 900]]) {
+  for (const [w, h] of [[320, 568], [390, 844], [844, 390], [1440, 900]]) {
     const browser = await chromium.launch()
     const page = await (await browser.newContext({ viewport: { width: w, height: h } })).newPage()
     await page.goto(BASE)
@@ -217,5 +236,6 @@ async function reviewCases() {
   await reducedMotion()
   await smallPhoneGate()
   await appScene()
+  await keyboardGate()
   console.log(problems.length ? problems.join('\n') : 'no problems found')
 })()

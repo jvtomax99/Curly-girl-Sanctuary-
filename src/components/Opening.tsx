@@ -17,9 +17,10 @@ const FILM = './intro/intro.mp4'
 const GATE = './intro/gate.webp'
 // The film's app scene, in seconds on the film's own clock: the curl picker
 // appears, one curl is picked, the Curly ID Card takes its place, and it all
-// leaves before the next shot. These must match tools/make-intro-film.sh.
+// fades out just before the next shot. These must match tools/make-intro-film.sh.
 const APP: [number, AppBeat][] = [
   [9.3, 'off'],
+  [9.1, 'leaving'],
   [7.35, 'card'],
   [6.3, 'picked'],
   [5.15, 'picker'],
@@ -54,6 +55,16 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
   const [stage, setStage] = useState<Stage>(skipToStart ? 'start' : 'gate')
   const video = useRef<HTMLVideoElement>(null)
   const [beat, setBeat] = useState<AppBeat>('off')
+  // Keyboard and screen-reader focus follows the opening: Skip while it plays,
+  // "Start the quiz" when it ends, so it never falls back to the page.
+  const skipBtn = useRef<HTMLButtonElement>(null)
+  const startBtn = useRef<HTMLButtonElement>(null)
+  const moved = useRef(false)
+  useEffect(() => {
+    if (!moved.current) return
+    if (stage === 'start') startBtn.current?.focus({ preventScroll: true })
+    else if (stage === 'film' || stage === 'pink') skipBtn.current?.focus({ preventScroll: true })
+  }, [stage])
 
   useEffect(() => {
     const next = NEXT[stage]
@@ -115,6 +126,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
   }, [stage])
 
   const begin = (withSound: boolean) => {
+    moved.current = true
     const v = video.current
     if (!v) {
       setStage('pink')
@@ -127,6 +139,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
   }
 
   const skip = () => {
+    moved.current = true
     const v = video.current
     if (v) {
       // Stop the film and its download.
@@ -141,6 +154,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
 
   return (
     <div className={`opening is-${stage}`} data-stage={stage}>
+      <h1 className="sr-only">Curly Girl Sanctuary</h1>
       <div className="op-video" aria-hidden={!atGate}>
         {/* The gate's picture is the film's first frame, so the tap brings it to life. */}
         {!skipToStart && stage !== 'start' && <img className="op-film" src={GATE} alt="" />}
@@ -162,7 +176,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
             {/* For fingers only: the buttons below do the same for keyboards and screen readers. */}
             <button className="op-tap" onClick={() => begin(true)} tabIndex={-1} aria-hidden="true" />
             <div className="op-gate">
-              <p className="op-gate-name">Curly Girl Sanctuary</p>
+              <p className="op-gate-name" aria-hidden="true">Curly Girl Sanctuary</p>
               <button className="btn btn-primary op-gate-go" onClick={() => begin(true)}>
                 Tap to start
               </button>
@@ -187,8 +201,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
       </div>
 
       <div className="op-start" aria-hidden={stage !== 'start'}>
-        <h1 className="sr-only">Curly Girl Sanctuary</h1>
-        <button className="btn btn-primary" onClick={onStart} tabIndex={stage === 'start' ? 0 : -1}>
+        <button ref={startBtn} className="btn btn-primary" onClick={onStart} tabIndex={stage === 'start' ? 0 : -1}>
           Start the quiz
         </button>
         {onLogIn && !atGate && (
@@ -199,7 +212,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
       </div>
 
       {stage !== 'start' && (
-        <button className="op-skip" onClick={skip}>
+        <button ref={skipBtn} className="op-skip" onClick={skip}>
           Skip
         </button>
       )}

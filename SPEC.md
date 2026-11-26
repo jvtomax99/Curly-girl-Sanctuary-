@@ -247,7 +247,8 @@ brief's suggestion). No Shop in v1.
 - Original files of the store illustration and Curly ID Card (add 4A to
   4C, porosity Low, Medium, High, a Scalp row).
 - Final 10 quiz questions and the heritage list.
-- Intro video script and footage (later).
+- Her own intro script and footage, only if she wants to replace the
+  painted film (later).
 - Learn contributors, the first country or region pages, and a qualified
   reviewer for the vitamin pages.
 - Holy Grail list (products and tools) with photos.

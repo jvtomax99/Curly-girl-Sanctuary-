@@ -119,7 +119,8 @@ coral sofa. No words or signs are painted into any picture.
   44 px tall). All text is Cocoa on Cream Light or on Tangerine. A tap
   anywhere on the picture also starts it. Skip stays top right.
 - **Film:** 9:16. It fills a phone (cropped to fit) and is a centred
-  column on a wide screen with Peach at the sides. No text over it.
+  column on a wide screen with Peach at the sides. No words are painted
+  into it; the only text over it is the app scene's.
 - **Reduce motion or data saver:** the gate, then straight to the pink and
   the words; the film never plays.
 

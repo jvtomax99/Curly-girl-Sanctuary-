@@ -2,7 +2,6 @@
 # Cuts the intro film (public/intro/intro.mp4) and its first picture (public/intro/gate.webp).
 #   tools/make-intro-film.sh <folder with the source files>
 # The source files are not in the repo (CREDITS.md says where they came from). The folder needs:
-#   k1.png   the painting the film starts on (also the "Tap to start" picture)
 #   v1.mp4 she smiles at the door and twirls a curl   v2.mp4 her curls bounce, close up
 #   v3.mp4 friends laughing inside   v4.mp4 everyone together   music.mp3
 # The cut: 15 s, 1080 by 1920, 30 frames a second, music only.
@@ -36,8 +35,8 @@ for row in "${SHOTS[@]}"; do
   if [ "$name" = PLATE ]; then
     # the last picture of v2's part, blurred, a little brighter and warmer, drawn closer by 6%
     read -r _ pss plen _ <<<"${SHOTS[1]}"
-    inputs+=(-ss "$(awk "BEGIN{print $pss+$plen-0.05}")" -t 0.04 -i "$SRC/v2.mp4")
-    filter+="[$n:v]$FIT,gblur=sigma=26,eq=brightness=0.03:saturation=1.18,loop=loop=$frames:size=1:start=0,trim=end_frame=$frames,"
+    inputs+=(-ss "$(awk "BEGIN{print $pss+$plen-0.05}")" -t 0.2 -i "$SRC/v2.mp4")   # 0.2 s always holds a frame; only the first is kept
+    filter+="[$n:v]trim=end_frame=1,$FIT,gblur=sigma=26,eq=brightness=0.03:saturation=1.18,loop=loop=$frames:size=1:start=0,trim=end_frame=$frames,"
     filter+="scale=w='$W*(1+0.06*n/$frames)':h=-2:eval=frame,crop=$W:$H,setpts=N/30/TB,setsar=1[v$n];"
   else
     speed=$(awk "BEGIN{print $out/$len}")
@@ -54,7 +53,8 @@ ffmpeg -v error -y "${inputs[@]}" -filter_complex "$filter" -map "[v]" -map "[a]
   -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p -preset slow -b:v "${VBITRATE:-3000k}" -maxrate 5500k -bufsize 11000k \
   -g 60 -c:a aac -b:a 128k -ar 44100 -movflags +faststart -t $LEN "$OUT/intro.mp4"
 
-# The gate's picture: the painting the first shot was made from, so the tap brings it to life.
-ffmpeg -v error -y -i "$SRC/k1.png" -vf "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920" \
-  -c:v libwebp -quality 86 "$OUT/gate.webp"
+# The gate's picture: the film's own first frame (from the source clip, not the compressed
+# film), so the tap brings the picture to life without a jump.
+read -r _ g1 _ _ <<<"${SHOTS[0]}"
+ffmpeg -v error -y -ss "$g1" -i "$SRC/v1.mp4" -frames:v 1 -vf "$FIT" -c:v libwebp -quality 88 "$OUT/gate.webp"
 ls -l "$OUT"
