@@ -65,8 +65,8 @@ no backend and behaves as in Phase 1.
   app's `#/page-not-found`); `sitemap.xml` (the one address).
 - `src/components/FilmApp.tsx`: the film's app scene (the real curl picker
   and `IdCard` with made-up answers, labelled Example), shown by `Opening`
-  on the film's clock (`APP`: picker 6.35 s, picked 7.5, card 8.55, fading
-  10.3, off 10.5). Sized in the film's own units (`--u`: `1cqw`, or
+  on the film's clock (`APP`: picker 7.15 s, picked 8.2, card 9.15, fading
+  10.7, off 10.9). Sized in the film's own units (`--u`: `1cqw`, or
   `min(1vw, 0.5625vh)` where container units are missing, such as iOS 15).
   `tools/shots.cjs` checks it stays inside its sheet at four sizes, one
   of them landscape.

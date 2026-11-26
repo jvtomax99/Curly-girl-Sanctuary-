@@ -2,11 +2,12 @@
 # Cuts the intro film (public/intro/intro.mp4) and its first picture (public/intro/gate.webp).
 #   tools/make-intro-film.sh <folder with the source files>
 # The source files are not in the repo (CREDITS.md says where they came from). The folder needs:
-#   v1.mp4 the camera circles her at the door   v2.mp4 it follows her through the door
-#   v3.mp4 it glides in across her curls   v4.mp4 it sweeps across the friends inside
-#   v5.mp4 it rises and pulls back from everyone together   music.mp3
+#   v1.mp4 the camera circles her at the door   v2.mp4 it swings around behind her as she turns
+#   (made from v1's last frame used and v3's first)   v3.mp4 it follows her through the door
+#   v4.mp4 it glides in across her curls   v5.mp4 it sweeps across the friends inside
+#   v6.mp4 it rises and pulls back from everyone together   music.mp3
 # The cut: 15 s, 1080 by 1920, 30 frames a second, music only.
-#   0.0  v1   2.0  v2   4.4  v3   6.2  the app scene   10.6  v4   12.8  v5   15.0 end
+#   0.0 v1  1.8 v2  3.8 v3  5.6 v4  7.0 the app scene  11.0 v5  13.0 v6  15.0 end
 # The app scene's picture is only the last picture of the shot before it, held, blurred and
 # slowly drawn closer: the app itself draws the curl picker and the Curly ID Card over it as
 # real text (src/components/FilmApp.tsx). If a time here changes, change APP in
@@ -21,12 +22,13 @@ FIT="fps=30,scale=$W:$H:force_original_aspect_ratio=increase,crop=$W:$H,setsar=1
 
 # name, start in the source, length taken from the source, length in the film (seconds)
 SHOTS=(
-  "v1 ${V1:-0.2 2.4 2.0}"
-  "v2 ${V2:-1.4 3.2 2.4}"
-  "v3 ${V3:-0.5 2.2 1.8}"
-  "PLATE 0 0 4.4"
-  "v4 ${V4:-0.4 2.6 2.2}"
-  "v5 ${V5:-2.3 2.7 2.2}"
+  "v1 ${V1:-0.2 2.1 1.8}"
+  "v2 ${V2:-0.0 5.0 2.0}"
+  "v3 ${V3:-1.6 2.4 1.8}"
+  "v4 ${V4:-0.5 1.7 1.4}"
+  "PLATE 0 0 4.0"
+  "v5 ${V5:-0.4 2.4 2.0}"
+  "v6 ${V6:-2.3 2.7 2.0}"
 )
 LEN=15
 MUSIC_FROM="${MUSIC_FROM:-0}"
