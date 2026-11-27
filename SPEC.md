@@ -54,18 +54,17 @@ brief's suggestion). No Shop in v1.
 
 ## Features in v1, and when each is done
 
-- **Opening.** A gate first: the film's first picture (the lead, made
-  from Susan's avatar, at the Sanctuary's door) with "Tap to start" and
+- **Opening.** A gate first: the film's first picture (Susan's painted
+  avatar at the Sanctuary's door, lifting a curl) with "Tap to start" and
   "Start without sound", because a phone only plays sound after a tap.
-  Then the intro film (Jose, 2026-11-26: 15 s, colourful and warm, then
-  "more realistic and a bit more dynamic": cinematic and near-real with a
-  moving camera, full HD, music only, no spoken words). Six scenes: the
-  camera circles her at the door, then swings around behind her as she
-  turns; it follows her as she opens the door and steps in; it glides in across her bouncing curls; the app itself, drawn by the app over a soft stretch of the film (the curl
-  picker, one curl picked, then a Curly ID Card with "Save or share my
-  card", all labelled Example); the camera sweeps across friends with
-  every curl pattern laughing inside; it rises and pulls back from
-  everyone together with her in the middle. It fades to black
+  Then the intro film (Jose, 2026-11-26: 15 s, painted, colourful and warm
+  with fine detail, full HD, music only, no spoken words; Jose picked this
+  painted film again on 2026-11-27, over the later near-real one). Five
+  scenes: she smiles at the door and twirls a curl; her curls bounce,
+  close up; the app itself, drawn by the app over a soft stretch of the
+  film (the curl picker, one curl picked, then a Curly ID Card with "Save
+  or share my card", all labelled Example); friends with every curl
+  pattern laughing inside; everyone together with her in the middle. It fades to black
   (about 1.5 s), black to Soft
   Coral Pink (about 2 s); "Hey beautiful," slides up and "Love the Curls"
   slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
@@ -260,7 +259,7 @@ brief's suggestion). No Shop in v1.
   Still to confirm: "Black American", "East Asian", "Indigenous",
   "North African" and "Pacific Islander" (added to round out her list).
 - Her own intro script and footage, only if she wants to replace the
-  made film (later).
+  painted film (later).
 - Learn contributors, the first country or region pages, and a qualified
   reviewer for the vitamin pages.
 - Holy Grail list (products and tools) with photos.
