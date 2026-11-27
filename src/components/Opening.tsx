@@ -1,6 +1,8 @@
 // The opening, from the brief: intro film, slowly to black, slowly to pink,
 // "Hey beautiful," slides up and "Love the Curls" slides down, the words fade,
-// and only "Start the quiz" stays. Reduce motion: cross-fades only (CSS).
+// and only the last button stays ("Start the quiz", or "Continue the quiz" or "See my Curly
+// ID Card" for someone who has been here). It plays at every launch. Reduce motion:
+// cross-fades only (CSS).
 //
 // The film has music, and a phone only plays sound after a tap, so the opening
 // waits on a gate first: the film's own first picture with "Tap to start".
@@ -46,12 +48,15 @@ const noFilm = () => {
 
 interface Props {
   onStart: () => void
+  /** "Start the quiz", "Continue the quiz" or "See my Curly ID Card": where she goes next. */
+  startLabel: string
+  /** Already played in this visit: show only the last button. */
   skipToStart: boolean
   /** "Already a member? Log in": only once sign-ups are open (or in preview). */
   onLogIn?: () => void
 }
 
-export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
+export default function Opening({ onStart, startLabel, skipToStart, onLogIn }: Props) {
   const [stage, setStage] = useState<Stage>(skipToStart ? 'start' : 'gate')
   const video = useRef<HTMLVideoElement>(null)
   const [beat, setBeat] = useState<AppBeat>('off')
@@ -202,7 +207,7 @@ export default function Opening({ onStart, skipToStart, onLogIn }: Props) {
 
       <div className="op-start" aria-hidden={stage !== 'start'}>
         <button ref={startBtn} className="btn btn-primary" onClick={onStart} tabIndex={stage === 'start' ? 0 : -1}>
-          Start the quiz
+          {startLabel}
         </button>
         {onLogIn && !atGate && (
           <button className="btn btn-plain op-login" onClick={onLogIn} tabIndex={stage === 'start' ? 0 : -1}>

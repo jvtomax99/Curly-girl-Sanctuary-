@@ -70,9 +70,13 @@ brief's suggestion). No Shop in v1.
   slides down, slowly (1.5 to 2 s), in white, serif with "Curls" in
   script; the words fade and only a centred "Start the quiz" stays. Small
   "Skip" on the gate and the film, and "Already a member? Log in" (both
-  suggested; Jose to confirm). First visit only. Reduce motion or data
+  suggested; Jose to confirm). Every launch (Jose, 2026-11-27, "I want the
+  intro every time the app opens"); the last button is "Start the quiz",
+  "Continue the quiz" mid-quiz, or "See my Curly ID Card" once it is done,
+  and back on the start screen in the same visit only the button shows.
+  Reduce motion or data
   saver: no film, and cross-fades instead of slides.
-  Done when: a first visit shows the gate, one tap plays the film and then
+  Done when: every launch shows the gate, one tap plays the film and then
   the sequence with those timings, and one tap on "Start the quiz" opens
   question 1 with no account; Skip reaches the button at any moment; with
   reduce motion on, no film plays and nothing slides; with no signal the

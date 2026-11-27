@@ -137,10 +137,8 @@ export default function App() {
     const r = readRoute()
     if (r.name !== 'opening') return r
     if (sb && (readLink().code || readLink().error)) return { name: 'login' } // an email link: settled once the session is known
-    // A fresh launch: a finished quiz opens the card, a started one resumes.
-    const s = load()
-    if (s.done) return { name: 'card' }
-    if (Object.keys(s.answers).length > 0) return { name: 'quiz', step: s.step }
+    // Every launch opens on the opening (Jose, 2026-11-27); its last button goes on to the
+    // quiz, the place she left it, or her card.
     return r
   })
 
@@ -195,11 +193,12 @@ export default function App() {
     return () => data.subscription.unsubscribe()
   }, [])
 
-  // A member who is signed in has been inside: the next launch skips the gate and the
-  // film (whether she logged in from the gate, a link or another screen).
+  // The gate and the film play once per launch: back on the start screen later in the same
+  // visit (Back from question 1, logging out), only the last button shows.
+  const [openingPlayed, setOpeningPlayed] = useState(false)
   useEffect(() => {
-    if (session && !state.seenOpening) update({ ...state, seenOpening: true })
-  }, [session, state, update])
+    if (route.name !== 'opening') setOpeningPlayed(true)
+  }, [route])
 
   // Keep the address in step with the screen chosen at launch.
   useEffect(() => {
@@ -253,10 +252,8 @@ export default function App() {
     document.title = titleOf(route)
   }, [route])
 
-  const start = () => {
-    update({ ...state, seenOpening: true })
-    go(`#/quiz/${state.done ? 0 : state.step}`)
-  }
+  const start = () => go(state.done ? '#/card' : `#/quiz/${state.step}`)
+  const startLabel = state.done ? 'See my Curly ID Card' : Object.keys(state.answers).length > 0 ? 'Continue the quiz' : 'Start the quiz'
   const retake = () => {
     update(fresh(true))
     go('#/quiz/0')
@@ -274,8 +271,6 @@ export default function App() {
    *  Back doesn't walk back through members-only screens. */
   const loggedOut = () => {
     setSession(null)
-    // Someone who has been inside doesn't get the gate and the film on the way out.
-    if (!state.seenOpening) update({ ...state, seenOpening: true })
     history.replaceState(null, '', state.done ? '#/card' : '#/')
     setRoute(readRoute())
   }
@@ -288,14 +283,14 @@ export default function App() {
         /* storage blocked */
       }
       setState(fresh(true))
-    } else if (!state.seenOpening) update({ ...state, seenOpening: true })
+    }
     history.replaceState(null, '', clearQuiz || !state.done ? '#/' : '#/card')
     setRoute(readRoute())
   }
   const withBar = session && ['profile', 'settings', 'community', 'learn', 'lab', 'kit', 'admin'].includes(route.name)
 
   if (route.name === 'opening') {
-    return <Opening onStart={start} skipToStart={state.seenOpening} onLogIn={canJoin && !session ? () => go('#/login') : undefined} />
+    return <Opening onStart={start} startLabel={startLabel} skipToStart={openingPlayed} onLogIn={canJoin && !session ? () => go('#/login') : undefined} />
   }
   if (MEMBERS_ONLY.has(route.name) && !authReady) {
     return <div className="app"><main className="screen"><p className="note" role="status">Loading…</p></main></div>
