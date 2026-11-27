@@ -88,13 +88,13 @@ email. **Now:** Phase 2 (`docs/phase2-plan.md`); see `HANDOFF.md`.
   Lab, Hair Posts (Best Day, Hot Mess), Tutorials, Ask the Sanctuary,
   Around the World, Holy Grail, "Join the Sanctuary", "No thanks, just the
   quiz". Two names are still open (`SPEC.md`): use the working names.
-- **Intro film** (`public/intro/intro.mp4`, 15 s, cinematic and near-real,
-  moving camera, full HD, music only, and its first picture `gate.webp`;
-  cut by `tools/make-intro-film.sh`), made 2026-11-26 with Jose's Runway
-  credits. Its lead is a near-real woman made from Susan's painted avatar
-  (Jose's pick; Jose, 2026-11-26: "Susan is fine with it"). Susan's photos
-  stay out of the repo, and no other real person's likeness is used.
-  No words are written or spoken in the film: the only words are the app's
+- **Intro film** (`public/intro/intro.mp4`, 15 s, painted, full HD, music
+  only, and its first picture `gate.webp`; cut by
+  `tools/make-intro-film.sh`), made 2026-11-26 with Jose's Runway credits
+  (Jose picked this painted film over the later near-real one, 2026-11-27).
+  Its lead is Susan's painted avatar (Jose's pick; Susan's photos stay out
+  of the repo). No photoreal picture or video of Susan or any real person.
+  No words are painted or spoken in the film: the only words are the app's
   own screens, drawn by `src/components/FilmApp.tsx` over the film on the
   times in `APP` (`Opening.tsx`), which must match the cut. Runway credits
   are Jose's: say what a batch will cost before making it.

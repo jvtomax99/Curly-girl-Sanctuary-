@@ -89,22 +89,17 @@ same time. Holy Grail's carpet roll-out is optional.
 
 ## The opening's gate and film (2026-11-26)
 
-The one filmed-looking part of the app, and only in the opening; everything
-after it stays flat and retro. The look (Jose, 2026-11-26: "colorful and
-warm but with high details", then "more realistic visually", then "more
-realistic and a bit more dynamic"): a cinematic, near-real film still. Real
-skin and real hair strands, glossy spiral curls with golden rim light, a
-full-frame cinema camera's shallow depth of field, golden hour light, a
-warm colour grade with gentle grain. Every shot moves: an orbit that swings
-around behind her as she turns, a tracking shot through the door, a glide across the curls, a sideways sweep, a rising
-pull-back. All the people are made up; the lead is made from Susan's
-avatar.
-The lead: big copper spiral curls with darker roots and a curly
+The one painted part of the app, and only in the opening; everything after
+it stays flat and retro. The look (Jose, 2026-11-26: "colorful and warm but
+with high details"; picked again 2026-11-27 over the near-real remake):
+rich hand-painted gouache, glossy sharply drawn spiral curls with golden
+highlights, golden hour light, saturated sunset colours.
+Susan's avatar: big copper spiral curls with darker roots and a curly
 fringe, large brown eyes, rosy cheeks, gold hoops, two thin gold necklaces,
 a tangerine top. The Sanctuary: a sunset orange wall, a cream arch around a
 teal door, monstera and palm leaves, coral bougainvillea, terracotta pots;
 inside, cream walls, a round mustard mirror, macrame hanging plants, a
-coral sofa. No words or signs appear in any picture.
+coral sofa. No words or signs are painted into any picture.
 
 - **App scene:** the film goes soft (its own last picture, blurred and
   slowly drawn closer) and the app draws a Cream Light sheet over it, 84%
@@ -122,7 +117,7 @@ coral sofa. No words or signs appear in any picture.
   44 px tall). All text is Cocoa on Cream Light or on Tangerine. A tap
   anywhere on the picture also starts it. Skip stays top right.
 - **Film:** 9:16. It fills a phone (cropped to fit) and is a centred
-  column on a wide screen with Peach at the sides. No words are written
+  column on a wide screen with Peach at the sides. No words are painted
   into it; the only text over it is the app scene's.
 - **Reduce motion or data saver:** the gate, then straight to the pink and
   the words; the film never plays.

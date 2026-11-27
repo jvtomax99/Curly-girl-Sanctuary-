@@ -66,12 +66,12 @@ no backend and behaves as in Phase 1.
   app's `#/page-not-found`); `sitemap.xml` (the one address).
 - `src/components/FilmApp.tsx`: the film's app scene (the real curl picker
   and `IdCard` with made-up answers, labelled Example), shown by `Opening`
-  on the film's clock (`APP`: picker 7.15 s, picked 8.2, card 9.15, fading
-  10.7, off 10.9). Sized in the film's own units (`--u`: `1cqw`, or
+  on the film's clock (`APP`: picker 5.15 s, picked 6.3, card 7.35, fading
+  9.1, off 9.3). Sized in the film's own units (`--u`: `1cqw`, or
   `min(1vw, 0.5625vh)` where container units are missing, such as iOS 15).
   `tools/shots.cjs` checks it stays inside its sheet at four sizes, one
   of them landscape.
-- `public/intro/`: the intro film `intro.mp4` (15 s, cinematic, 1080 by 1920, music only) and
+- `public/intro/`: the intro film `intro.mp4` (15 s, painted, 1080 by 1920, music only) and
   `gate.webp`, its first frame, shown at the gate. Cut from the rendered
   shots by `tools/make-intro-film.sh <folder>`; the source shots are not in
   the repo (`CREDITS.md`). The film is not saved for offline use (the worker leaves
