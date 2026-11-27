@@ -232,7 +232,42 @@ async function reviewCases() {
   await browser.close()
 }
 
+// Every launch plays the opening (Jose, 2026-11-27), and its last button goes on to where she
+// was: the next question mid-quiz, her card once the quiz is done. Back to the start screen in
+// the same visit shows only that button.
+async function everyLaunch() {
+  const browser = await chromium.launch()
+  const page = await (await browser.newContext({ viewport: { width: 390, height: 844 } })).newPage()
+  const launch = async (want) => {
+    await page.goto('about:blank')
+    await page.goto(BASE)
+    if ((await stageNow(page)) !== 'gate') return problems.push(`every launch: no gate (${want})`)
+    await page.getByRole('button', { name: 'Skip' }).click()
+    await page.getByRole('button', { name: want, exact: true }).click({ timeout: 3000 }).catch(() => problems.push(`every launch: no "${want}" button`))
+  }
+  await launch('Start the quiz')
+  await page.getByRole('button', { name: 'Curl type 3A' }).click()
+  await page.getByRole('button', { name: 'Next' }).click()
+  await launch('Continue the quiz')
+  const at = await page.locator('.quiz-count').innerText().catch(() => '')
+  if (!at.startsWith('2 of')) problems.push(`every launch: "Continue the quiz" went to "${at}", not question 2`)
+  // Back to the start screen in the same visit: no gate, no film.
+  await page.goto(BASE + '#/quiz/0')
+  await page.getByRole('button', { name: 'Back' }).click()
+  await page.waitForSelector('.opening')
+  if ((await stageNow(page)) !== 'start') problems.push(`every launch: the start screen in the same visit shows "${await stageNow(page)}", not just the button`)
+  // Made-up finished quiz.
+  await page.evaluate(() => localStorage.setItem('cgs.quiz.v1', JSON.stringify({
+    v: 1, step: 8, done: true, seenOpening: true, showHeritage: false, traditionsNote: '',
+    answers: { pattern: ['3A'], porosity: ['medium'], thickness: ['fine'], density: ['medium'], heritage: [], wash: ['weekly'], scalp: ['balanced'], struggle: ['frizz'], goal: ['moisture'] },
+  })))
+  await launch('See my Curly ID Card')
+  if (!(await page.locator('.idcard').count())) problems.push('every launch: "See my Curly ID Card" did not open the card')
+  await browser.close()
+}
+
 ;(async () => {
+  await everyLaunch()
   await reviewCases()
   await run(390, 844, 'phone')
   await run(1440, 900, 'desktop')

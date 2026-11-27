@@ -61,8 +61,8 @@ async function run(width, height, tag, server) {
   const a = await open('A')
   await a.goto(BASE)
   await a.evaluate((q) => localStorage.setItem('cgs.quiz.v1', q), QUIZ)
-  await a.goto(BASE + '#/preview')
-  await a.reload()
+  await a.reload() // load the saved quiz (a launch opens on the opening)
+  await a.goto(BASE + '#/preview') // preview on: with a finished quiz it goes on to the card
   await a.getByRole('button', { name: 'Join the Sanctuary' }).waitFor()
   check(await a.getByText('Testing only').isVisible(), `${tag}: preview banner missing`)
   check(await a.getByRole('button', { name: 'Already a member? Log in' }).isVisible(), `${tag}: card has no Log in link in preview`)
